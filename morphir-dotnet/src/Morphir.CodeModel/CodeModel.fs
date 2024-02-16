@@ -244,3 +244,4 @@ module Exportable =
         | NotExported value -> value
         
     let isExported = function | Exported _ -> true | NotExported _ -> false
+    let (|Bool|_|) = function "true" -> Some true | "false" -> Some false | _ -> None

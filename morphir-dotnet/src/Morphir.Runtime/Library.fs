@@ -1,4 +1,4 @@
-﻿namespace Morphir.Host
+﻿namespace Morphir.Runtime
 
 module Say =
     let hello name =
