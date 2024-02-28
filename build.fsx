@@ -128,6 +128,59 @@ type SourceCodeDownloader(?sslVerify) =
                 else
                     ()            
         } 
+let downloadArchiveFromGitRepo owner projectName shaOrBranch extract =
+    async {
+        let downloadDir = codeFilesDir </> "downloads" </> owner </> projectName  </> shaOrBranch
+        let targetDir = codeFilesDir </> owner </> projectName
+        let fileName = $"{projectName}.zip"
+        let file = FileInfo(downloadDir </> fileName)
+        if file.Exists && file.Length <> 0 then
+            return ()
+        else
+            file.Directory.Create()
+            let fs = file.Create()
+            
+            
+            let url = $"https://github.com/{owner}/{projectName}/archive/{shaOrBranch}.zip"
+            let! response = Http.AsyncRequestStream(
+                    url,
+                    headers = [| "Content-Disposition", $"attachment; filename=\"{fileName}\"" |]
+                )
+            if response.StatusCode <> 200 then
+                printfn $"Could not download %s{url}"
+            do! Async.AwaitTask(response.ResponseStream.CopyToAsync(fs))
+            fs.Close()
+            if extract then    
+                use zip = ZipFile.OpenRead(file.FullName)
+                zip.ExtractToDirectory(FileInfo(targetDir).FullName)
+            else
+                ()
+                
+    }
+    
+let downloadMorphirElmFile commitHash relativePath =
+    async {
+        let file = FileInfo(codeFilesDir </> "morphir-elm" </> commitHash </> relativePath)
+        if file.Exists && file.Length <> 0 then
+            return ()
+        else
+            file.Directory.Create()
+            use fs = file.Create()
+            let fileName = Path.GetFileName(relativePath)
+            let url =
+                $"https://raw.githubusercontent.com/finos/morphir-elm/{commitHash}/{relativePath}"
+            let! response =
+                Http.AsyncRequestStream(
+                    url,
+                    headers = [| "Content-Disposition", $"attachment; filename=\"{fileName}\"" |]
+                )
+            if response.StatusCode <> 200 then
+                printfn $"Could not download %s{relativePath}"
+            do! Async.AwaitTask(response.ResponseStream.CopyToAsync(fs))
+            fs.Close()
+            //updateFileRaw file
+    }
+    
 
 pipeline "Init" {
     workingDir __SOURCE_DIRECTORY__
