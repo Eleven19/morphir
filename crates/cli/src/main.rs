@@ -12,6 +12,9 @@ struct Cli {
 #[derive(Debug, Subcommand)]
 enum Commands {
     Make(MakeArgs),
+    Gen(GenArgs),
+    Develop(DevelopArgs),
+    Restore,
 }
 
 #[derive(Debug, Args)]
@@ -63,8 +66,19 @@ fn main() {
     let args = Cli::parse();
     match args.command {
         Commands::Make(args) => {
+            println!("Make - Not Implemented Yet");
             println!("Args: {:?}", args);
         }
+        Commands::Gen(args) => {
+            println!("Generating - Not Implemented Yet");
+            println!("Args: {:?}", args);
+        }
+        Commands::Develop(args) => {
+            println!("Develop (Starting Server) - Not Implemented Yet");
+            println!("Args: {:?}", args);
+        }
+        Commands::Restore => {
+            println!("Restoring - Not Implemented Yet");
         }
     }
 }

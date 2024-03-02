@@ -20,6 +20,7 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FSharp.Core" />
     <PackageReference Include="Extism.Pdk" />
   </ItemGroup>
 </Project>

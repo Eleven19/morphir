@@ -1,8 +1,8 @@
-namespace FunBlazorDemo1.Components
+namespace Morphir.Live.Components
 
 open System.Reflection
 open Fun.Blazor
-open FunBlazorDemo1.Components.Layout
+open Morphir.Live.Components.Layout
 
 type Routes() =
     inherit FunComponent()

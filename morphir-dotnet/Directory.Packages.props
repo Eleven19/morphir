@@ -3,19 +3,24 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Extism.Pdk" Version="1.0.0" />
+    <PackageVersion Include="Blazored.LocalStorage" Version="4.0.5" />
+    <PackageVersion Include="Extism.Pdk" Version="1.0.1" />
     <PackageVersion Include="Fable.Core" Version="4.3.0" />
     <PackageVersion Include="Fable.Python" Version="4.6.1" />
-    <PackageVersion Include="FSharp.Core" Version="8.0.200" />
+    <PackageVersion Include="FSharp.Core" Version="8.0.101" />
     <PackageVersion Include="FsUnit" Version="6.0.0" />
     <PackageVersion Include="FsUnit.xUnit" Version="6.0.0" />
-    <PackageVersion Include="Fun.Blazor" Version="4.0.3" />
-    <PackageVersion Include="Fun.Blazor.Microsoft.Authorization" Version="8.0.2" />
-    <PackageVersion Include="Fun.Blazor.Microsoft.Web" Version="8.0.2" />
+    <PackageVersion Include="Fun.Blazor" Version="4.0.8" />
+    <PackageVersion Include="Fun/Blazor.BlazorMonaco" Version="3.1.0" />
+    <PackageVersion Include="Fun.Blazor.HotReload" Version="4.0.2" />
+    <PackageVersion Include="Fun.Blazor.Microsoft.Authorization" Version="8.0.1" />
+    <PackageVersion Include="Fun.Blazor.Microsoft.Web" Version="8.0.1" />
+    <PackageVersion Include="Fun.Blazor.MudBlazor" Version="6.15.0" />
     <PackageVersion Include="Fun.Blazor.Server" Version="4.0.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.2" />
+    <PackageVersion Include="Fun.Blazor.Wasm" Version="4.0.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageVersion Include="xunit" Version="2.6.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.6" />

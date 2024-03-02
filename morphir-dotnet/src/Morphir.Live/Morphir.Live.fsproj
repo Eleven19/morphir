@@ -11,6 +11,8 @@
 		<Compile Include="Components/Pages/From.fs" />
 		<Compile Include="Components/Routes.fs" />
 		<Compile Include="Components/App.fs" />
+		<Compile Include="Stores.fs" />
+		<Compile Include="Hooks.fs" />
 		<Compile Include="Startup.fs" />
 	</ItemGroup>
 	

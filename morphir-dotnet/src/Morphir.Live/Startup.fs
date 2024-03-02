@@ -4,8 +4,9 @@ open System
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.DependencyInjection
-open FunBlazorDemo1.Components
-open FunBlazorDemo1.Client.Pages
+open MudBlazor.Services
+open Morphir.Live.Components
+open Morphir.Live.Client.Pages
 
 let builder = WebApplication.CreateBuilder(Environment.GetCommandLineArgs())
 
@@ -14,7 +15,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents()
     
 builder.Services.AddFunBlazorServer()
-
+builder.Services.AddMudServices()
 
 let app = builder.Build()
 
