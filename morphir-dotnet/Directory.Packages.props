@@ -3,8 +3,11 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Argu" Version="6.2.2" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.0.5" />
+    <PackageVersion Include="Extism.runtime.all" Version="1.1.0" />
     <PackageVersion Include="Extism.Pdk" Version="1.0.1" />
+    <PackageVersion Include="Extism.Sdk" Version="1.1.0" />
     <PackageVersion Include="Fable.Core" Version="4.3.0" />
     <PackageVersion Include="Fable.Python" Version="4.6.1" />
     <PackageVersion Include="FSharp.Core" Version="8.0.101" />
@@ -21,7 +24,11 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageVersion Include="Spectre.Console" Version="0.48.0" />
+    <PackageVersion Include="Spectre.Console.Json" Version="0.48.0" />
+    <PackageVersion Include="Tomlyn" Version="0.17.0" />
     <PackageVersion Include="xunit" Version="2.6.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.6" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0">

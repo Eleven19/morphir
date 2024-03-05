@@ -22,11 +22,17 @@ type MainLayout() as this =
                     //     Edge Edge.Start
                     //     OnClick(fun _ -> isDrawerOpen <- not isDrawerOpen)
                     // }
-                    SectionOutlet'() { SectionName "header" }
+                    
+                    MudText'() {
+                        Typo Typo.h5
+                        "Morphir"
+                    }
+                    //SectionOutlet'() { SectionName "header" }
                 }
                 MudDrawer'() {
+                    ClipMode DrawerClipMode.Always
                     Open isDrawerOpen
-                    // OpenChanged(fun x -> isDrawerOpen <- x)
+                    //OpenChanged(fun x -> isDrawerOpen <- x)
                     NavMenu.Create()
                 }
                 MudMainContent'() { MudContainer'() { this.Body } }
