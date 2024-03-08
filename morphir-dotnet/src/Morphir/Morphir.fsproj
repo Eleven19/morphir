@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Tools\CommandLine.fs" />
+    <Compile Include="Daemon.fs" />
+    <Compile Include="CommandLine.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
 
@@ -15,8 +16,11 @@
     <PackageReference Include="Extism.runtime.all" />
     <PackageReference Include="Extism.Sdk" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="SemanticVersioning" />
+    <PackageReference Include="System.IO.Abstractions" />
     <PackageReference Include="Spectre.Console" />
     <PackageReference Include="Spectre.Console.Json" />
+    <PackageReference Include="StreamJsonRpc" />
     <PackageReference Include="Tomlyn" />
   </ItemGroup>
 

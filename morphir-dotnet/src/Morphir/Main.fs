@@ -22,7 +22,8 @@ let runExtism argv =
 let main argv =
     let parser = CommandLine.Parser.defaultParser
     try
-        parser.ParseCommandLine(inputs = argv, raiseOnUsage = true) |> ignore
+        let commandLine = parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
+        printfn "Command line: %A" commandLine
         0
     with :? ArguParseException as e -> eprintfn "%s" e.Message; 1
     //runExtism argv    

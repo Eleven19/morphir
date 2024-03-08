@@ -1,6 +1,5 @@
 namespace Morphir.CodeModel
 open System 
-open System.Reflection.Metadata
 open Morphir.IR
 
 [<RequireQualifiedAccess>]

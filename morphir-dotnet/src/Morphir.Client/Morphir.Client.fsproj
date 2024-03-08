@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Contracts.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Morphir.CodeModel\Morphir.CodeModel.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SemanticVersioning" />
+  </ItemGroup>
+
+</Project>
