@@ -5,16 +5,16 @@ open Morphir.Host
 
 type Host(configuration: HostConfiguration) =
     static member DefaultConfiguration = HostConfiguration.Default
-    static Default = Host(Host.DefaultConfiguration)
+    static member Default = Host(Host.DefaultConfiguration)
 
-    member __.RunAsync() =
+    member _.RunAsync  () =
         async {
             configuration.Extensions.ExtensionsSearchLocations
             |> List.iter (fun location -> printfn "Extension Location: %A" location)
         }
 
 and HostBuilder(configuration: HostConfiguration) =
-    member __.Build() = Host(configuration)
+    member _.Build() = Host(configuration)
 
 module Host =
 

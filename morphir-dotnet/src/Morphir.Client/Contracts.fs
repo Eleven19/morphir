@@ -1,8 +1,8 @@
 module Morphir.Client.Contracts
-open System
+
 open System.Collections.Generic
-open System.Threading
 open System.Threading.Tasks
+open Morphir.CodeModel
 
 [<RequireQualifiedAccess>]
 module Methods =
@@ -10,10 +10,10 @@ module Methods =
     let Version = "morphir/version"
 
 type TextRange =
-    {StartLine: int
-     StartColumn: int
-     EndLine: int
-     EndColumn: int}
+    { StartLine: int
+      StartColumn: int
+      EndLine: int
+      EndColumn: int }
 
 type DiagnosticSeverity =
     | Error = 1
@@ -23,11 +23,11 @@ type DiagnosticSeverity =
 
 [<NoComparison>]
 type Diagnostic =
-    {Message: string
-     Severity: DiagnosticSeverity
-     SourcePath: string option
-     Range: TextRange option}
-    
+    { Message: string
+      Severity: DiagnosticSeverity
+      SourcePath: string option
+      Range: TextRange option }
+
 type CompilationResult =
     | ClassicIR of string
     | IR of string
@@ -35,15 +35,19 @@ type CompilationResult =
 
 [<NoComparison>]
 type CompileDocumentRequest =
-    {SourceCode: string
-     FilePath: string
-     Config: IReadOnlyDictionary<string,string> option }
-    
-[<NoComparison>]    
+    { SourceCode: string
+      FilePath: string
+      Config: IReadOnlyDictionary<string, string> option }
+
+[<NoComparison>]
 type CompilationResponse =
-    {CompilationResult: CompilationResult
-     Diagnostics: Diagnostic list}
-    
+    { CompilationResult: CompilationResult
+      Diagnostics: Diagnostic list }
+
+type PushDistribution =
+    { Package: string
+      Version: Versioning.Version }
+
 type MorphirService =
     interface
         abstract member VersionAsync: unit -> Task<string>
