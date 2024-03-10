@@ -1,9 +1,6 @@
 namespace Morphir.IR
 
-type Name =
-    | Name of string list
-
-    static let fromList (segments: string list) = Name segments
+open Morphir.IR.Name
 
 type Path = Path of Name list
 

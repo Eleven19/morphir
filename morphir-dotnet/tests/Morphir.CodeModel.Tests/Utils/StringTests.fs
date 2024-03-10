@@ -1,7 +1,7 @@
 module Morphir.Utils.StringTests
 
 open System
-open Morphir.Utils.Strings
+open Morphir.Extensions.Strings
 open FsCheck.Xunit
 
 [<Property>]

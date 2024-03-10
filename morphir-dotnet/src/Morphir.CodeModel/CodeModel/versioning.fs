@@ -1,6 +1,6 @@
 module Morphir.CodeModel.Versioning
 
-open Morphir.Utils.Strings
+open Morphir.Extensions
 
 type Version =
     | FullSemanticVersion of Major: int * Minor: int * Patch: int * PreRelease: string option * Build: string option
@@ -16,16 +16,7 @@ and SemanticVersion =
       PreRelease: string option
       Build: string option }
 
-
-type VersioningError =
-    | InvalidVersion of string
-    | InvalidMajorVersion of string
-    | InvalidMinorVersion of string
-    | InvalidPatch of string
-    | InvalidPreRelease of string
-    | InvalidBuild of string
-
-type PartialVersion =
+and PartialVersion =
     { Major: int option
       Minor: int option
       Patch: int option
@@ -34,6 +25,17 @@ type PartialVersion =
 
     member x.Tupled() =
         (x.Major, x.Minor, x.Patch, x.PreRelease, x.Build)
+
+type VersioningError =
+    | InvalidVersionNumber of string
+    | InvalidMajorVersion of string
+    | InvalidMinorVersion of string
+    | InvalidPatch of string
+    | InvalidPreRelease of string
+    | InvalidBuild of string
+    | InvalidVersion of PartialVersion
+
+
 
 let partialVersionToVersion (partialVersion: PartialVersion) : Result<Version, VersioningError> =
     match partialVersion.Tupled() with
@@ -44,3 +46,4 @@ let partialVersionToVersion (partialVersion: PartialVersion) : Result<Version, V
         Ok(FullSemanticVersion(major, minor, patch, preRelease, build))
     | (Some major, None, None, _, _) -> Ok(MajorVersion(major))
     | (Some major, Some minor, None, _, _) -> Ok(MajorMinorVersion(major, minor))
+    | _ -> Error(InvalidVersion partialVersion)

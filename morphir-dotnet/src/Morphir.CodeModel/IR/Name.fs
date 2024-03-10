@@ -10,87 +10,58 @@
 // limitations under the License.
 module Morphir.IR.Name
 
-open System
-open System.Text.RegularExpressions
-open Morphir.Extensions
-open Morphir.SDK
 open Morphir.SDK.Maybe
+open Morphir.SDK
 
-/// Type that represents a name that is made up of words.
 type Name = string list
 
+let inline fromList (words: string list) : Name = words
 
-/// Translate a string into a name by splitting it into words. The algorithm is designed
-/// to work with most well-known naming conventions or mix of them. The general rule is that
-/// consecutive letters and numbers are treated as words, upper-case letters and non-alphanumeric
-/// characters start a new word.
-let fromString (input: string) : Name =
-    let wordPattern = new Regex("([a-zA-Z][a-z]*|[0-9]+)")
+let fromString (string: string) : Name =
+    let wordPattern =
+        Regex.fromString "([a-zA-Z][a-z]*|[0-9]+)" |> Maybe.withDefault Regex.never
 
-    wordPattern.Matches(input)
-    |> Seq.cast<Match>
-    |> Seq.map (fun m -> m.Value.ToLower())
-    |> Seq.toList
+    Regex.find wordPattern string
+    |> List.map (fun me -> me.Match)
+    |> List.map String.toLower
+    |> fromList
 
-/// Turns a name into a list of human-readable strings. The only difference
-/// compared to `toList` is how it handles abbreviations. They will
-/// be turned into a single upper-case word instead of separate single-character
-/// words.
-let toHumanWords (name: Name) : string list =
-    let join (abbrev: string list) : string =
-        abbrev |> List.reduce (+) |> String.ToUpper
+let inline toList (name: Name) : List<string> = name
 
-    let rec loop (prefix: string list) (abbrev: string list) (suffix: string list) : string list =
+let capitalize string : string =
+    match String.uncons string with
+    | Just(headChar, tailString) -> String.cons (Char.toUpper headChar) tailString
+    | Nothing -> string
+
+let toTitleCase name =
+    name |> toList |> List.map capitalize |> String.join ""
+
+let toCamelCase (name: Name) =
+    match name |> toList with
+    | [] -> System.String.Empty
+    | head :: tail -> tail |> List.map capitalize |> List.cons head |> String.join ""
+
+let toHumanWords name : List<string> =
+    let words = toList name
+
+    let join abbrev =
+        abbrev |> String.join "" |> String.toUpper
+
+    let rec process' prefix abbrev suffix =
         match suffix with
         | [] ->
-            if List.isEmpty abbrev then
+            if (List.isEmpty abbrev) then
                 prefix
             else
-                prefix @ [ join abbrev ]
+                List.append prefix [ join abbrev ]
         | first :: rest ->
-            if String.length first = 1 then
-                loop prefix (abbrev @ [ first ]) rest
+            if (String.length first = 1) then
+                process' prefix (List.append abbrev [ first ]) rest
             else
                 match abbrev with
-                | [] -> loop (prefix @ [ first ]) [] rest
-                | _ -> loop (prefix @ [ join abbrev; first ]) [] rest
+                | [] -> process' (List.append prefix [ first ]) [] rest
+                | _ -> process' (List.append prefix [ join abbrev; first ]) [] rest
 
-    match name with
-    | [ word ] -> if String.length word = 1 then name else loop [] [] name
-    | _ -> loop [] [] name
+    process' [] [] words
 
-/// Turns a name into a title-case string.
-let toTitleCase (name: Name) : string =
-    name
-    |> List.map (fun word -> word.[0..0].ToUpper() + word.[1..])
-    |> String.concat ""
-
-/// Turns a name into a camel-case string.
-let toCamelCase (name: Name) : string =
-    match name with
-    | [] -> ""
-    | head :: tail ->
-        tail
-        |> List.map (fun word -> word.[0..0].ToUpper() + word.[1..])
-        |> List.reduce (+) head
-
-/// Turns a name into a snake-case string.
-let toSnakeCase (name: Name) : string =
-    name |> toHumanWords |> String.concat "_"
-
-
-
-/// Turns a name into a list of human-readable strings with the first word capitalized. The only difference
-/// compared to `toList` is how it handles abbreviations. They will
-/// be turned into a single upper-case word instead of separate single-character
-/// words.
-let toHumanWordsTitle (name: Name) : string list =
-    match toHumanWords name with
-    | firstWord :: rest -> (firstWord.[0..0].ToUpper() + firstWord.[1..]) :: rest
-    | [] -> []
-
-/// Convert a list of strings into a name.
-let fromList (words: string list) : Name = words
-
-/// Convert a name to a list of strings.
-let toList (name: Name) : string list = name
+let toSnakeCase name = name |> toHumanWords |> String.join "_"
