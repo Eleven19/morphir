@@ -13,9 +13,11 @@ module Morphir.IR.Name
 open Morphir.SDK.Maybe
 open Morphir.SDK
 
-type Name = string list
 
-let inline fromList (words: string list) : Name = words
+[<Struct>]
+type Name = Name of Parts: string list
+
+let inline fromList (words: string list) : Name = Name words
 
 let fromString (string: string) : Name =
     let wordPattern =
@@ -26,7 +28,7 @@ let fromString (string: string) : Name =
     |> List.map String.toLower
     |> fromList
 
-let inline toList (name: Name) : List<string> = name
+let inline toList (Name name) : List<string> = name
 
 let capitalize string : string =
     match String.uncons string with
