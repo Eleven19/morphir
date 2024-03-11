@@ -31,29 +31,27 @@ let tests =
               testCase "Using SnakeCase"
               <| fun _ -> Path.toString Name.toSnakeCase "/" path |> Expect.equal "foo_bar/baz" ]
 
-    // let isPrefixOfTests =
-    //     describe
-    //         "isPrefixOf"
-    //         [ let toModuleName = Path.toString Name.toTitleCase "."
+    let isPrefixOfTests =
+        describe
+            "isPrefixOf"
+            [ let toModuleName = Path.toString Name.toTitleCase "."
 
-    //           let isPrefixOfTestCase prefix path expectedResult =
-    //               testCase (
-    //                   "isPrefixOf "
-    //                   + toModuleName prefix
-    //                   + " "
-    //                   + toModuleName path
-    //                   + " == "
-    //                   + Bool.toString expectedResult
-    //               )
-    //               <| fun _ ->
-    //                   Path.isPrefixOf (Path.Path.FromList prefix) ((Path.Path.FromList path))
-    //                   |> Expect.equal expectedResult
+              let isPrefixOfTestCase prefix path expectedResult =
+                  testCase (
+                      "isPrefixOf "
+                      + toModuleName prefix
+                      + " "
+                      + toModuleName path
+                      + " == "
+                      + Bool.toString expectedResult
+                  )
+                  <| fun _ -> Path.isPrefixOf prefix path |> Expect.equal expectedResult
 
-    //           isPrefixOfTestCase [ [ "foo" ]; [ "bar" ] ] [ [ "foo" ] ] true
+              isPrefixOfTestCase (path { "foo.bar" }) (path { "foo" }) true
 
-    //           isPrefixOfTestCase [ [ "foo" ] ] [ [ "foo" ]; [ "bar" ] ] false
+              isPrefixOfTestCase (path { "foo.bar" }) (path { "bar" }) false
 
-    //           isPrefixOfTestCase [ [ "foo" ]; [ "bar" ] ] [ [ "foo" ]; [ "bar" ] ] true ]
+              isPrefixOfTestCase (path { "foo.bar" }) (path { "foo.bar" }) true ]
 
     // let encodePathTests =
     //     describe

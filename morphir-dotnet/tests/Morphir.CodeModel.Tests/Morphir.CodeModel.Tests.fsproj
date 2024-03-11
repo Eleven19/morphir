@@ -9,9 +9,10 @@
     <Compile Include="IR\NameTests.fs" />
     <Compile Include="IR\NameBuilderTests.fs" />
     <Compile Include="IR\PathTests.fs" />
+    <Compile Include="IR\PathBuilderTests.fs" />
     <Compile Include="CodeModelTests.fs" />
     <Compile Include="Utils\StringTests.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Expecto" />
