@@ -8,62 +8,77 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-module Morphir.IR.Name
+namespace Morphir.IR
 
-open Morphir.SDK.Maybe
-open Morphir.SDK
+module Name =
+    open Morphir.SDK.Maybe
+    open Morphir.SDK
 
+    [<Struct>]
+    type Name =
+        | Name of Parts: string list
 
-[<Struct>]
-type Name = Name of Parts: string list
+        static member inline FromList(words: string list) : Name = Name words
 
-let inline fromList (words: string list) : Name = Name words
+        static member PartsFromString(input: string) : string list =
+            let wordPattern =
+                Regex.fromString "([a-zA-Z][a-z]*|[0-9]+)" |> Maybe.withDefault Regex.never
 
-let fromString (string: string) : Name =
-    let wordPattern =
-        Regex.fromString "([a-zA-Z][a-z]*|[0-9]+)" |> Maybe.withDefault Regex.never
+            Regex.find wordPattern input
+            |> List.map (fun me -> me.Match)
+            |> List.map String.toLower
 
-    Regex.find wordPattern string
-    |> List.map (fun me -> me.Match)
-    |> List.map String.toLower
-    |> fromList
+    let inline fromList (words: string list) : Name = Name words
 
-let inline toList (Name name) : List<string> = name
+    let fromString (input: string) : Name =
+        input |> Name.PartsFromString |> fromList
 
-let capitalize string : string =
-    match String.uncons string with
-    | Just(headChar, tailString) -> String.cons (Char.toUpper headChar) tailString
-    | Nothing -> string
+    let inline toList (Name name) : List<string> = name
 
-let toTitleCase name =
-    name |> toList |> List.map capitalize |> String.join ""
+    let capitalize string : string =
+        match String.uncons string with
+        | Just(headChar, tailString) -> String.cons (Char.toUpper headChar) tailString
+        | Nothing -> string
 
-let toCamelCase (name: Name) =
-    match name |> toList with
-    | [] -> System.String.Empty
-    | head :: tail -> tail |> List.map capitalize |> List.cons head |> String.join ""
+    let toTitleCase name =
+        name |> toList |> List.map capitalize |> String.join ""
 
-let toHumanWords name : List<string> =
-    let words = toList name
+    let toCamelCase (name: Name) =
+        match name |> toList with
+        | [] -> System.String.Empty
+        | head :: tail -> tail |> List.map capitalize |> List.cons head |> String.join ""
 
-    let join abbrev =
-        abbrev |> String.join "" |> String.toUpper
+    let toHumanWords name : List<string> =
+        let words = toList name
 
-    let rec process' prefix abbrev suffix =
-        match suffix with
-        | [] ->
-            if (List.isEmpty abbrev) then
-                prefix
-            else
-                List.append prefix [ join abbrev ]
-        | first :: rest ->
-            if (String.length first = 1) then
-                process' prefix (List.append abbrev [ first ]) rest
-            else
-                match abbrev with
-                | [] -> process' (List.append prefix [ first ]) [] rest
-                | _ -> process' (List.append prefix [ join abbrev; first ]) [] rest
+        let join abbrev =
+            abbrev |> String.join "" |> String.toUpper
 
-    process' [] [] words
+        let rec process' prefix abbrev suffix =
+            match suffix with
+            | [] ->
+                if (List.isEmpty abbrev) then
+                    prefix
+                else
+                    List.append prefix [ join abbrev ]
+            | first :: rest ->
+                if (String.length first = 1) then
+                    process' prefix (List.append abbrev [ first ]) rest
+                else
+                    match abbrev with
+                    | [] -> process' (List.append prefix [ first ]) [] rest
+                    | _ -> process' (List.append prefix [ join abbrev; first ]) [] rest
 
-let toSnakeCase name = name |> toHumanWords |> String.join "_"
+        process' [] [] words
+
+    let toSnakeCase name = name |> toHumanWords |> String.join "_"
+
+open Name
+
+type NameBuilder() =
+    member inline _.Combine(Name existing, Name other) : Name = existing @ other |> Name.fromList
+    member inline _.Delay(f: _ -> Name) = f ()
+    member inline _.Return(nameStr: string) = Name.fromString nameStr
+    member inline _.ReturnFrom(name: Name) = name
+
+    member inline _.Yield(input: string) = Name.fromString input

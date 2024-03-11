@@ -12,8 +12,8 @@
     <PackageVersion Include="AvaloniaEdit.TextMate" Version="11.0.6" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.0.5" />
     <PackageVersion Include="CliWrap" Version="3.6.4" />
-    <PackageVersion Include="Expecto" Version="9.0.4" />
-    <PackageVersion Include="Expecto.FsCheck" Version="9.0.4" />
+    <PackageVersion Include="Expecto" Version="10.1.0" />
+    <PackageVersion Include="Expecto.FsCheck" Version="10.1.0" />
     <PackageVersion Include="Extism.runtime.all" Version="1.1.0" />
     <PackageVersion Include="Extism.Pdk" Version="1.0.1" />
     <PackageVersion Include="Extism.Sdk" Version="1.1.0" />
@@ -50,6 +50,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="YoloDev.Expecto.TestSdk" Version="0.12.12" />
+    <PackageVersion Include="YoloDev.Expecto.TestSdk" Version="0.14.3" />
   </ItemGroup>
 </Project>
