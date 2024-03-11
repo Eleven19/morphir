@@ -77,16 +77,24 @@ module PathDsl =
         member inline this.For(step, f) = this.Combine(step, f ())
 
         [<CustomOperation("name")>]
-        member inline _.Name((), parts: string list) =
-            [ [ Name.fromList parts ] |> PathBuilderStep.Names ]
-
-        [<CustomOperation("name")>]
         member inline _.Name((), nameStr: string) =
             [ [ Name.fromString nameStr ] |> PathBuilderStep.Names ]
 
         [<CustomOperation("name")>]
         member inline _.Name(steps: PathBuilderStep list, nameStr: string) =
             PathBuilderStep.Names [ Name.fromString nameStr ] :: steps
+
+        [<CustomOperation("names")>]
+        member inline _.Names((), names: string list) =
+            names |> List.map Name.fromString |> PathBuilderStep.Names
+
+        [<CustomOperation("names")>]
+        member inline _.Names(step: PathBuilderStep, names: string list) =
+            (names |> List.map Name.fromString |> PathBuilderStep.Names) :: step :: []
+
+        [<CustomOperation("names")>]
+        member inline _.Names(steps: PathBuilderStep list, names: string list) =
+            (names |> List.map Name.fromString |> PathBuilderStep.Names) :: steps
 
         member inline _.Run(steps: PathBuilderStep list) : Path =
             let emptyPath = Path.fromList []

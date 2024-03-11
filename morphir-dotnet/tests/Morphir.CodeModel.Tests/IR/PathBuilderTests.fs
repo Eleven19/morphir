@@ -25,7 +25,19 @@ let tests =
                       name "City"
                   }
 
-              let expected = Path.fromString "name.Address.City"
+              let expected = Path.fromString "name.address.city"
+
+              actual |> Expect.equal expected
+          }
+
+          test "should allow creation from names created from lists" {
+              let actual =
+                  path {
+                      names [ "Target"; "User"; "Address" ]
+                      names [ "PhoneNumber"; "AreaCode" ]
+                  }
+
+              let expected = Path.fromString "Target.User.Address/PhoneNumber.AreaCode"
 
               actual |> Expect.equal expected
           } ]
