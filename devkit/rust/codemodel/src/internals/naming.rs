@@ -47,7 +47,7 @@ impl NamingContext {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Name(Vec<Run>);
 
 impl Name {
@@ -56,7 +56,7 @@ impl Name {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Run {
     text: Text,
     #[serde(skip)]
@@ -69,11 +69,20 @@ impl Run {
     }
 }
 
-pub struct CanonicalNameStr(String);
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct CanonicalNameStr(pub String);
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Path(Vec<Name>);
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Path(pub Vec<Name>);
 impl Path {}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct PackageName(pub Path);
+impl From<Path> for PackageName {
+    fn from(path: Path) -> Self {
+        Self(path)
+    }
+}
 
 #[cfg(test)]
 mod tests {

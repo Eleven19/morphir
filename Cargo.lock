@@ -576,6 +576,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "derivative"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fcc3dd5e9e9c0b295d6e1e4d811fb6f157d5ffd784b8d202fc62eac8035a770b"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "derive_more"
 version = "0.99.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1406,6 +1417,7 @@ dependencies = [
  "config",
  "dirs",
  "miette",
+ "morphir_codemodel",
  "refined_type",
  "schematic",
  "serde",
@@ -1417,12 +1429,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "morphir_cdk"
+name = "morphir_codemodel"
 version = "0.0.1"
 dependencies = [
+ "derivative",
  "flagset",
  "lasso",
  "proptest",
+ "regex",
  "serde",
  "serde_json",
  "serde_repr",
@@ -1436,11 +1450,30 @@ version = "0.0.1"
 dependencies = [
  "flagset",
  "proptest",
+ "serde",
  "serde_repr",
 ]
 
 [[package]]
+name = "morphir_package_management_extension"
+version = "0.0.1"
+dependencies = [
+ "extism-pdk",
+ "morphir_codemodel",
+]
+
+[[package]]
 name = "morphir_rdk"
+version = "0.0.1"
+dependencies = [
+ "extism-pdk",
+ "flagset",
+ "lasso",
+ "serde_repr",
+]
+
+[[package]]
+name = "morphir_services"
 version = "0.0.1"
 dependencies = [
  "extism-pdk",

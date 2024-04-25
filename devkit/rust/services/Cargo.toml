@@ -1,7 +1,7 @@
 [package]
-name = "morphir_cdk"
+name = "morphir_services"
 version = "0.0.1"
-description = "Morphir CodeModel"
+description = "Shared services for working with Morphir"
 homepage = "https://morphir.finos.org"
 repository = "https://github.com/finos/morphir"
 readme = "README.md"
@@ -16,16 +16,7 @@ maintenance = { status = "actively-developed" }
 [features]
 
 [dependencies]
+extism-pdk.workspace = true
 flagset.workspace = true
 lasso.workspace = true
-lasso.features = ["multi-threaded", "serialize"]
-serde.workspace = true
-serde.features = ["derive"]
 serde_repr = { workspace = true, optional = true }
-state.workspace = true
-url.workspace = true
-url.features = ["serde"]
-
-[dev-dependencies]
-proptest = { workspace = true }
-serde_json.workspace = true

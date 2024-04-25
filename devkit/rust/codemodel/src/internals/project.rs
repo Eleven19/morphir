@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use url::Url;
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PackageName(String);
 
@@ -12,7 +11,7 @@ pub struct DependencyPath(String);
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DependencyInfo {
-    location: DependencyLocation,
+    pub location: DependencyLocation,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -23,15 +22,15 @@ pub enum DependencyLocation {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MorphirProject {
-    name: PackageName,
+    pub name: PackageName,
     #[serde(rename = "sourceDirectory")]
-    source_directory: String,
+    pub source_directory: String,
     #[serde(rename = "exposedModules")]
-    exposed_modules: Vec<ModuleName>,
+    pub exposed_modules: Vec<ModuleName>,
     #[serde(rename = "localDependencies", default)]
-    local_dependencies: Vec<DependencyPath>,
+    pub local_dependencies: Vec<DependencyPath>,
     #[serde(default)]
-    dependencies: Vec<DependencyInfo>,
+    pub dependencies: Vec<DependencyInfo>,
 }
 
 #[cfg(test)]

@@ -1,0 +1,4 @@
+[tasks.build]
+condition.env_contains = { CARGO_MAKE_CRATE_NAME = "extension" }
+command = "cargo"
+args = ["build", "--all-features", "--release", "--target", "wasm32-wasi"]

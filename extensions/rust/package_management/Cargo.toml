@@ -1,0 +1,23 @@
+[package]
+name = "morphir_package_management_extension"
+version = "0.0.1"
+description = "Morphir extension focused on providing package management capabilities for Morphir projects."
+homepage = "https://morphir.finos.org"
+repository = "https://github.com/finos/morphir"
+readme = "README.md"
+keywords = ["morphir", "finos"]
+authors = ["Damian Reeves"]
+license = "Apache-2.0"
+edition = "2021"
+
+[lib]
+crate_type = ["cdylib"]
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+
+[dependencies]
+extism-pdk.workspace = true
+morphir_codemodel = { path = "../../../devkit/rust/codemodel" }

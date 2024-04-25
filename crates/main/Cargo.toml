@@ -29,3 +29,4 @@ starbase.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 tracing.workspace = true
+morphir_codemodel = { path = "../../devkit/rust/codemodel" }
