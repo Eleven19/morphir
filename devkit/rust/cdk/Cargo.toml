@@ -18,9 +18,14 @@ maintenance = { status = "actively-developed" }
 [dependencies]
 flagset.workspace = true
 lasso.workspace = true
-lasso.features = ["multi-threaded"]
+lasso.features = ["multi-threaded", "serialize"]
+serde.workspace = true
+serde.features = ["derive"]
 serde_repr = { workspace = true, optional = true }
 state.workspace = true
+url.workspace = true
+url.features = ["serde"]
 
 [dev-dependencies]
 proptest = { workspace = true }
+serde_json.workspace = true

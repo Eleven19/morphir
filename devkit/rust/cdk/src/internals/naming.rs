@@ -1,4 +1,5 @@
 use lasso::{Spur, ThreadedRodeo};
+use serde::{Deserialize, Serialize};
 use state::InitCell;
 use std::sync::Arc;
 
@@ -46,6 +47,7 @@ impl NamingContext {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Name(Vec<Run>);
 
 impl Name {
@@ -54,9 +56,10 @@ impl Name {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Run {
     text: Text,
+    #[serde(skip)]
     rodeo: Arc<ThreadedRodeo>,
 }
 
@@ -68,6 +71,7 @@ impl Run {
 
 pub struct CanonicalNameStr(String);
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Path(Vec<Name>);
 impl Path {}
 
@@ -98,5 +102,14 @@ mod tests {
         let run = context.get_run("This is fine!");
         let actual = context.run_to_str(run);
         assert_eq!(actual, "This is fine!");
+    }
+
+    #[test]
+    fn can_serialize_and_deserialize_a_run() {
+        let context = NamingContext::new();
+        let run = context.get_run("This is fine!");
+        let serialized = serde_json::to_string(&run).unwrap();
+        let deserialized: Run = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(context.run_to_str(deserialized), "This is fine!");
     }
 }
