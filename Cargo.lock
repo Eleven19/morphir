@@ -1843,16 +1843,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "morphir_core"
-version = "0.0.1"
-dependencies = [
- "flagset",
- "proptest",
- "serde",
- "serde_repr",
-]
-
-[[package]]
 name = "morphir_package_management_extension"
 version = "0.0.1"
 dependencies = [

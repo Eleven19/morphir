@@ -44,3 +44,7 @@ pub struct LibraryDistributionInfo {
 #[cfg(feature = "json")]
 #[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct DistributionJson(serde_json::Value);
+
+pub(crate) mod loader {
+
+}

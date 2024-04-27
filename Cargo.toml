@@ -1,7 +1,6 @@
 [workspace]
 resolver = "2"
 members = [
-    "bindings/local/rust/crates/core",
     "crates/main",
     "crates/testkit",
     "devkit/rust/codemodel",
