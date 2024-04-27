@@ -40,3 +40,7 @@ pub struct BundleDistributionInfo {
 pub struct LibraryDistributionInfo {
     pub package_name: PackageName,
 }
+
+#[cfg(feature = "json")]
+#[derive(Debug, Deserialize, Clone, Serialize)]
+pub struct DistributionJson(serde_json::Value);

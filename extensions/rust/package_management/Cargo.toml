@@ -20,4 +20,7 @@ maintenance = { status = "actively-developed" }
 
 [dependencies]
 extism-pdk.workspace = true
-morphir_codemodel = { path = "../../../devkit/rust/codemodel" }
+serde_json.workspace = true
+morphir_codemodel = { path = "../../../devkit/rust/codemodel", features = [
+    "json",
+] }

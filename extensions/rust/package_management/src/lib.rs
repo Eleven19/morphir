@@ -1,7 +1,6 @@
 use extism_pdk::*;
 use morphir_codemodel::distribution::*;
-use morphir_codemodel::project::{DependencyLocation, MorphirProject};
-use morphir_codemodel::*;
+use morphir_codemodel::project::MorphirProject;
 
 #[plugin_fn]
 pub fn greet(name: String) -> FnResult<String> {
@@ -10,8 +9,8 @@ pub fn greet(name: String) -> FnResult<String> {
 
 #[plugin_fn]
 pub fn get_project_dependencies(
-    Json(project): Json<MorphirProject>,
-) -> FnResult<Json<Distributions>> {
+    Json(_project): Json<MorphirProject>,
+) -> FnResult<Json<Vec<DistributionJson>>> {
     //let mut distributions = Vec::new();
     // for dependency in &project.dependencies {
     //     match &dependency.location {
@@ -27,5 +26,6 @@ pub fn get_project_dependencies(
     //         }
     //     }
     // }
-    Ok(Json(Distributions::empty()))
+    let distributions: Vec<DistributionJson> = Vec::new();
+    Ok(distributions.into())
 }
