@@ -1,5 +1,7 @@
 use crate::Name;
+
 use rdf_types::dataset::Graph;
+
 pub enum Type {
     Variable(TypeVariable),
     Unit,
@@ -21,23 +23,24 @@ pub enum Literal {
 pub enum Data {
     Bool(bool),
     String(String),
-    Unit
+    Unit,
 }
 
-trait AnnotationGraph{}
+trait AnnotationGraph {}
 
 trait With {}
 
 pub struct TypeMeta<T> {
-    pub annotations: Box<dyn AnnotationGraph>
+    pub annotations: Box<dyn AnnotationGraph>,
+    pub type_info: T,
 }
-pub struct ValueAnnotation<T,> {
-    pub type_info:T,
-    pub annotations: Box<dyn AnnotationGraph>
+pub struct ValueAnnotation<T> {
+    pub type_info: T,
+    pub annotations: Box<dyn AnnotationGraph>,
 }
 
 pub enum NodeId {
     TypeId(),
     ValueId(),
-    ModuleId()
+    ModuleId(),
 }
