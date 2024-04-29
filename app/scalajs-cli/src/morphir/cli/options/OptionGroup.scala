@@ -5,12 +5,14 @@ object OptionGroup {
   val verbosity = "Verbosity"
   val setup = "Setup"
   val restore = "Restore"
+  val make = "Make"
 
   val order: Seq[String] = Seq(
     help,
     verbosity,
     restore,
-    setup
+    setup,
+    make
   )
 
 }
