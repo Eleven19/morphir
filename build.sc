@@ -9,7 +9,10 @@ object morphir extends CrossPlatform {
     trait Shared extends ScalaProject with PlatformScalaModule {
       def ivyDeps =
         Agg(
+          Deps.com.github.alexarchambault.`case-app`,
           Deps.com.lihaoyi.mainargs,
+          Deps.io.github.cquiroz.`scala-java-time`,
+          Deps.io.github.cquiroz.`scala-java-time-tzdb`,
           Deps.com.lihaoyi.sourcecode,
           Deps.dev.zio.`izumi-reflect`,
           Deps.io.github.kitlangton.neotype
@@ -25,7 +28,10 @@ object morphir extends CrossPlatform {
     }
     object js extends Shared with ScalaJSProject {
       override def jsEnvConfig: Target[JsEnvConfig] = T {
-        JsEnvConfig.ExoegoJsDomNodeJs()
+        JsEnvConfig.NodeJs()
+      }
+      override def mainClass: T[Option[String]] = T {
+        Some("morphir.Main")
       }
       override def moduleKind = T { ModuleKind.CommonJSModule }
       object test extends ScalaJSTests with TestModule.ZioTest {
@@ -127,6 +133,12 @@ object Deps {
 
     }
     case object github {
+      case object cquiroz {
+        val `scala-java-time` =
+          ivy"io.github.cquiroz::scala-java-time::${Versions.`scala-java-time`}"
+        val `scala-java-time-tzdb` =
+          ivy"io.github.cquiroz::scala-java-time-tzdb::${Versions.`scala-java-time`}"
+      }
       case object iltotore {
         val iron = ivy"io.github.iltotore::iron::${Versions.iron}"
       }
@@ -157,6 +169,7 @@ object Versions {
   val neotype = "0.2.5"
   val parsley = "4.5.1"
   val scala = "3.3.3"
+  val `scala-java-time` = "2.5.0"
   val scalaJS = "1.16.0"
   val scalaNative = "0.5.1"
   val sourcecode = "0.4.1"
