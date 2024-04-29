@@ -1,7 +1,7 @@
 {
     "type": "application",
     "source-directories": [
-        "app/scalajs-cli/elm-sources/sandbox/src"
+        "elm/projects/sandbox/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {

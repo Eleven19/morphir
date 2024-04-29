@@ -17,5 +17,7 @@
   },
   "workspaces": [
     "app/scalajs-cli"
-  ]
+  ],
+  "devDependencies": {
+  }
 }
