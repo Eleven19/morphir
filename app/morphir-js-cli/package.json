@@ -1,6 +1,5 @@
 {
   "name": "@finos/morphir-js-cli",
-  "module": "index.ts",
   "type": "module",
   "types": "build/types/types.d.ts",
   "bin": {
@@ -11,15 +10,15 @@
     "compile": "tsc -p .",
     "copy-templates": "copyfiles ./src/templates/* ./build/templates",
     "vite:build": "vite build",
-    "build": "yarn clean-build && yarn compile && yarn copy-templates",
-    "prepublishOnly": "yarn build",
+    "build": "bun clean-build && bun compile && bun copy-templates",
+    "prepublishOnly": "bun run build",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
-    "test": "jest",
-    "watch": "jest --watch",
-    "snapupdate": "jest --updateSnapshot",
-    "coverage": "jest --coverage"
+    "test": "bunx jest",
+    "watch": "bunx jest --watch",
+    "snapupdate": "bunx jest --updateSnapshot",
+    "coverage": "bunx jest --coverage"
   },
-    "files": [
+  "files": [
     "build",
     "LICENSE",
     "readme.md",
