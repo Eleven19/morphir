@@ -1,0 +1,17 @@
+{
+  "name": "scalajs-cli",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun run build.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "elm": "^0.19.1-6",
+    "elm-test-rs": "^3.0.0-5",
+    "vite": "^5.2.10"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
