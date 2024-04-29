@@ -1,3 +1,6 @@
-import { submit } from '@finos/mock-morphir-elm';
+import { processJobWithCallback, submitJob } from '@finos/mock-morphir-elm';
 
-submit("Hello, Elm!");
+
+processJobWithCallback("Hello, Elm!", (data: any) => {
+    console.log(data);
+});
