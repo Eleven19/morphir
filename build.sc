@@ -97,11 +97,8 @@ object packages extends Module {
       val destPath = T.dest / s"${artifact}.js"
       val commandArgs = Seq(
         jsPackageManagerRunner(),
-        "elm",
-        "make",
-        "--output",
-        destPath.toString(),
-        "src/Main.elm"
+        "run",
+        "build"
       )
       // util.Jvm.runSubprocess(commandArgs, T.ctx().env, T.ctx().workspace)
       // PathRef(destPath)
