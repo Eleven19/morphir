@@ -1,5 +1,8 @@
+import mill.scalajslib.api.ModuleSplitStyle
+import os.Path
 import mill._, scalalib._, scalajslib._, scalanativelib._, publish._
-import mill.scalajslib.api.{JsEnvConfig, ModuleKind}
+import mill.scalajslib.api.{JsEnvConfig, ModuleKind, ModuleSplitStyle}
+import mill.util
 import $ivy.`io.eleven19.mill::mill-crossbuild::0.1.0`
 import io.eleven19.mill.crossbuild._
 
@@ -18,27 +21,65 @@ object morphir extends CrossPlatform {
           Deps.io.github.kitlangton.neotype
         )
     }
-    object jvm extends Shared {
-      object test extends ScalaTests with TestModule.ZioTest {
-        def ivyDeps = Agg(
-          Deps.dev.zio.`zio-test`,
-          Deps.dev.zio.`zio-test-sbt`
-        )
-      }
-    }
     object js extends Shared with ScalaJSProject {
+
+      def public(dev: Boolean) = {
+        val js = if (dev) fastLinkJS else fullLinkJS
+        T.task {
+          val sandboxOutputJs = morphir.cli.elm.projects.sandbox.make()
+          val dest = T.dest
+          val jsDir = js().dest.path
+          os.list(jsDir).foreach { file =>
+            os.move(file, dest / file.last)
+          }
+
+          os.move(sandboxOutputJs.path, dest / sandboxOutputJs.path.last)
+
+          val mounts = Map(
+            dest -> "/",
+            T.ctx.workspace / "public" -> "/"
+          )
+          mounts.map { case (k, v) =>
+            k.relativeTo(os.pwd).toString -> v
+          }
+        }
+      }
+
+      def publicDev = T {
+        public(dev = true)()
+      }
+      def publicProd = T {
+        public(dev = false)()
+      }
+      def buildProd = T {
+        publicProd()
+        os.proc("npm", "run", "build").call()
+      }
+
       override def jsEnvConfig: Target[JsEnvConfig] = T {
         JsEnvConfig.NodeJs()
       }
+
+      override def moduleSplitStyle: Target[ModuleSplitStyle] = T {
+        ModuleSplitStyle.SmallModulesFor(List("morphir"))
+      }
+
       override def mainClass: T[Option[String]] = T {
         Some("morphir.Main")
       }
-      override def moduleKind = T { ModuleKind.CommonJSModule }
+      override def moduleKind = T { ModuleKind.ESModule }
       object test extends ScalaJSTests with TestModule.ZioTest {
         def ivyDeps = Agg(
           Deps.dev.zio.`zio-test`,
           Deps.dev.zio.`zio-test-sbt`
         )
+      }
+
+    }
+
+    object elm extends Module {
+      object projects extends Module {
+        object sandbox extends ElmApplication {}
       }
     }
   }
@@ -54,6 +95,46 @@ trait ScalaProject extends ScalaModule {
 
 trait ScalaJSProject extends ScalaJSModule {
   def scalaJSVersion = Versions.scalaJS
+}
+
+trait ElmProject extends Module {
+
+  /** The folders containing all source files fed into the compiler
+    */
+  def allSources: T[Seq[PathRef]] = T { sources() ++ generatedSources() }
+
+  /** Folders containing source files that are generated rather than
+    * hand-written; these files can be generated in this target itself, or can
+    * refer to files generated from other targets
+    */
+  def generatedSources: T[Seq[PathRef]] = T { Seq.empty[PathRef] }
+  def sources = T.sources { millSourcePath / "src" }
+
+  /** All individual source files fed into the Java compiler
+    */
+  def allSourceFiles: T[Seq[PathRef]] = T {
+    Lib.findSourceFiles(allSources(), Seq("elm")).map(PathRef(_))
+  }
+
+}
+
+trait ElmApplication extends ElmProject {
+  def targetFileName = T { "elm.js" }
+
+  def make = T {
+    val moduleName = millSourcePath.last
+    val destPath = T.dest / targetFileName()
+
+    val commandArgs = Seq(
+      "npx",
+      "elm",
+      "make",
+      "--output",
+      destPath.toString()
+    ) ++ allSourceFiles().map(_.path.toString)
+    util.Jvm.runSubprocess(commandArgs, T.ctx().env, T.ctx().workspace)
+    PathRef(destPath)
+  }
 }
 
 //---------------------------------------------------------------------

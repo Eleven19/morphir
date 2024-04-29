@@ -16,3 +16,9 @@ target/
 
 # Mill related
 out/
+
+# Node related
+node_modules/
+
+# Elm related 
+elm-stuff/
