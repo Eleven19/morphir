@@ -1,8 +1,13 @@
 {
   "private": true,
-  "name": "morphir-root",
+  "type": "module",
+  "name": "workspaces",
   "version": "0.1.0",
   "description": "The root project for Morphir builds",
+  "workspaces": [    
+    "packages/mock-morphir-elm",
+    "app/scalajs-cli"
+  ],
   "directories": {
     "doc": "docs"
   },
@@ -15,9 +20,7 @@
     "elm": "^0.19.1-6",
     "elm-test-rs": "^3.0.0-5"
   },
-  "workspaces": [
-    "app/scalajs-cli"
-  ],
+
   "devDependencies": {
   }
 }

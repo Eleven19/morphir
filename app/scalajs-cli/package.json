@@ -1,9 +1,11 @@
 {
-  "name": "scalajs-cli",
+  "name": "@finos/morphir-scalajs-cli",
   "module": "index.ts",
   "type": "module",
   "scripts": {
     "build": "vite build"
+  },
+  "dependencies": {
   },
   "devDependencies": {
     "@types/bun": "latest",
