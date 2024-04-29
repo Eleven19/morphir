@@ -11,3 +11,8 @@ target/
 # Scala related
 .metals/
 .scala-build/
+.bloop/
+.bsp/
+
+# Mill related
+out/

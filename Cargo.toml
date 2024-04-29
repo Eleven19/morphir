@@ -1,8 +1,8 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/main",
-    "crates/testkit",
+    "app/crates/main",
+    "app/crates/testkit",
     "devkit/rust/codemodel",
     "devkit/rust/services",
     "devkit/rust/rdk",
@@ -10,7 +10,7 @@ members = [
     "devkit/rust/xdk",
     "extensions/rust/*",
 ]
-default-members = ["crates/main", "crates/testkit"]
+default-members = ["app/crates/main", "app/crates/testkit"]
 
 [workspace.dependencies]
 anyhow = "^1.0"
