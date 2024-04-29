@@ -6,7 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@finos/mock-morphir-elm": "0.0.0"
+    "@finos/mock-morphir-elm": "workspace:*"
   },
   "devDependencies": {
     "@types/bun": "latest",
