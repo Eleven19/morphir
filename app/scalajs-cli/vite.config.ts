@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [elmPlugin()],
     build: {
         rollupOptions: {
-            input: './index.ts',
+            input: ['./index.ts', './sandbox-api.ts'],
             output: {
                 format: 'esm',
                 entryFileNames: '[name].js',
