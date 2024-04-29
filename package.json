@@ -4,9 +4,9 @@
   "name": "workspaces",
   "version": "0.1.0",
   "description": "The root project for Morphir builds",
-  "workspaces": [    
+  "workspaces": [
     "packages/mock-morphir-elm",
-    "app/scalajs-cli"
+    "app/morphir-js-cli"
   ],
   "directories": {
     "doc": "docs"
@@ -20,7 +20,8 @@
     "elm": "^0.19.1-6",
     "elm-test-rs": "^3.0.0-5"
   },
-
-  "devDependencies": {
-  }
+  "devDependencies": {},
+  "trustedDependencies": [
+    "elm-test-rs"
+  ]
 }
