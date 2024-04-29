@@ -40,7 +40,7 @@ object morphir extends CrossPlatform {
             T.ctx.workspace / "public" -> "/"
           )
           mounts.map { case (k, v) =>
-            k.relativeTo(os.pwd).toString -> v
+            k.relativeTo(T.ctx().workspace).toString -> v
           }
         }
       }
@@ -89,6 +89,11 @@ object morphir extends CrossPlatform {
   object js extends Shared with ScalaJSProject
 }
 
+object packages extends Module {
+  def npxRunner = "bunx"
+  object `mock-morphir-elm` extends ElmProject {}
+}
+
 trait ScalaProject extends ScalaModule {
   def scalaVersion = Versions.scala
 }
@@ -97,10 +102,11 @@ trait ScalaJSProject extends ScalaJSModule {
   def scalaJSVersion = Versions.scalaJS
 }
 
-trait ElmProject extends Module {
+trait JsProject extends Module {
+  def npxRunner = T { "npx"}
 
   /** The folders containing all source files fed into the compiler
-    */
+  */
   def allSources: T[Seq[PathRef]] = T { sources() ++ generatedSources() }
 
   /** Folders containing source files that are generated rather than
@@ -113,20 +119,28 @@ trait ElmProject extends Module {
   /** All individual source files fed into the Java compiler
     */
   def allSourceFiles: T[Seq[PathRef]] = T {
+    Lib.findSourceFiles(allSources(), Seq("js", "ts")).map(PathRef(_))
+  }
+}
+
+trait ElmProject extends JsProject {
+
+  /** All individual source files fed into the Java compiler
+    */
+  def allSourceFiles: T[Seq[PathRef]] = T {
     Lib.findSourceFiles(allSources(), Seq("elm")).map(PathRef(_))
   }
-
 }
 
 trait ElmApplication extends ElmProject {
-  def targetFileName = T { "elm.js" }
+  def targetFileName = T { "elm.js" }  
 
   def make = T {
     val moduleName = millSourcePath.last
     val destPath = T.dest / targetFileName()
 
     val commandArgs = Seq(
-      "npx",
+      npxRunner(),
       "elm",
       "make",
       "--output",
