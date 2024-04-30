@@ -8,14 +8,22 @@
     "morphir": "bin/morphir"
   },
   "scripts": {
-    "bundle": "bun build ./src/cli.ts --compile --outfile ./dist/morphir",
-    "clean-build": "rimraf -rf ./build",
-    
+    "test": "bun test",
+    "clean": "rimraf -rf ./build ./dist",
+    "bundle": "bun build ./src/cli.ts --compile --outfile ./dist/sonar-analysis",
+    "lint": "bun run --bun eslint .",
+    "lint:fix": "bun run --bun eslint --fix .",
+    "format": "prettier --write .",
+    "format:validate": "prettier --check .",
+    "typecheck": "bun run tsc",
+    "build": "tsc && tsc -p tsconfig.cjs.json",
+    "postinstall": "bun run build"
   },
   "files": [
     "build",
+    "dist",
     "LICENSE",
-    "readme.md",
+    "README.md",
     "docs",
     "bin"
   ],
