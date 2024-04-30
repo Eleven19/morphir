@@ -1,6 +1,6 @@
 {
+  "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": false,
     "experimentalDecorators": true,
     "lib": [
@@ -16,9 +16,11 @@
     "noImplicitAny": false,
     "noImplicitThis": true,
     "noUnusedLocals": true,
+    "sourceMap": true,
+    "inlineSourceMap": false,
     "outDir": "build",
-    "strict": true,
-    "target": "es5",
+    "strict": false,
+    "target": "ESNext",
     "declaration": true,
     "declarationDir": "build/types"
   },
