@@ -19,5 +19,18 @@
       "eslint:recommended",
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended"
-    ]
+    ],
+    "plugins": ["import", "simple-import-sort"],
+    "rules": {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { "argsIgnorePattern": "^_" }
+      ],
+      "import/first": "error",
+      "import/no-cycle": "error",
+      "import/newline-after-import": "error",
+      "import/no-duplicates": "error",
+      "@typescript-eslint/consistent-type-imports": "error"
+    }
 }
