@@ -4,7 +4,7 @@ members = [
     "crates/main",
     "crates/morphir-javy-core",
     "crates/testkit",
-    "devkit/rust/codemodel",
+    "crates/codemodel",
     "devkit/rust/services",
     "devkit/rust/rdk",
     "devkit/rust/tdk",
