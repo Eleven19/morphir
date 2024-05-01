@@ -1,23 +1,16 @@
 use clap::{Args, Parser, Subcommand};
 use std::ffi::OsString;
-;
-
-#[derive(Debug, Parser)]
-struct CliArgs {
-    config: String,
-    verbose: bool,
-}
 
 #[derive(Debug, Parser)]
 #[command(name = "morphir")]
 #[command(about = "CLI tooling/commands for the morphir ecosystem", long_about = None)]
-struct Cli {
+pub struct Cli {
     #[command(subcommand)]
     command: Commands,
 }
 
 #[derive(Debug, Subcommand)]
-enum Commands {
+pub(crate) enum Commands {
     Make(MakeArgs),
     Gen(GenArgs),
     Develop(DevelopArgs),
@@ -28,7 +21,7 @@ enum Commands {
 #[command(args_conflicts_with_subcommands = true)]
 #[command(flatten_help = true)]
 #[command(about = "Translate Elm sources to Morphir IR")]
-struct MakeArgs {
+pub(crate) struct MakeArgs {
     #[arg(short, long)]
     /// Root directory of the project where morphir.json is located. (default: ".")
     project_dir: Option<OsString>,
@@ -41,7 +34,7 @@ struct MakeArgs {
 #[command(args_conflicts_with_subcommands = true)]
 #[command(flatten_help = true)]
 #[command(about = "Generate code from Morphir IR")]
-struct GenArgs {
+pub(crate) struct GenArgs {
     #[arg(short, long)]
     /// Source location where the Morphir IR will be loaded from. (default: "morphir-ir.json")
     input: Option<OsString>,
@@ -63,7 +56,7 @@ struct GenArgs {
 #[command(args_conflicts_with_subcommands = true)]
 #[command(flatten_help = true)]
 #[command(about = "Start up a web server and expose developer tools through a web UI")]
-struct DevelopArgs {
+pub(crate) struct DevelopArgs {
     #[arg(short, long)]
     /// Root directory of the project where morphir.json is located. (default: ".")
     project_dir: Option<OsString>,

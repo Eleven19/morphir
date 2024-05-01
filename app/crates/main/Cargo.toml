@@ -27,7 +27,16 @@ path = "experiments/boa/src/main.rs"
 anyhow.workspace = true
 boa_engine.workspace = true
 boa_runtime.workspace = true
-clap.workspace = true
+clap = { workspace = true, features = [
+    "color",
+    "derive",
+    "env",
+    "help",
+    "suggestions",
+    "usage",
+    "wrap_help",
+] }
+clap_complete = { workspace = true }
 config.workspace = true
 dirs.workspace = true
 miette = { workspace = true, features = ["fancy"] }

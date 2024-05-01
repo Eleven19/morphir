@@ -1,8 +1,11 @@
 use std::path::PathBuf;
-
+use clap::Parser;
 use starbase::tracing::info;
 use starbase::{system, App, MainResult, State};
+
+mod cli_args;
 mod settings;
+use cli_args::Cli;
 use settings::Settings;
 
 #[derive(Debug, State)]
@@ -13,6 +16,9 @@ pub struct WorkspaceRoot(PathBuf);
 
 #[derive(Debug, State)]
 pub struct ArgMatches(clap::ArgMatches);
+
+#[derive(Debug, State)]
+pub struct CliArgs(Cli);
 
 #[tokio::main]
 async fn main() -> MainResult {
@@ -44,17 +50,15 @@ async fn finish(state: StateRef<WorkspaceRoot>) {
 
 #[system]
 async fn gather_cli_args(states: StatesMut) {
-    //TODO: Properly init CLI options
-    //NOTE: we may need to change this to happen at a later stage since eventually we will want plugins to be able to add their own CLI options
-    let cmd = clap::Command::new("morphir");
-    let matches = cmd.get_matches();
-    states.set(ArgMatches(matches));
+    let cli = Cli::parse();
+    states.set(CliArgs(cli));
 }
 
 #[system]
 async fn load_config(states: StatesMut) -> SystemResult {
     let settings = Settings::new()?;
-    println!("settings: {:?}", settings);
+    //TODO: do logging here
+    //println!("settings: {:?}", settings);
 
     let config: Config = Config(settings);
     states.set::<Config>(config);
