@@ -68,9 +68,15 @@ async fn load_config(states: StatesMut) -> SystemResult {
 }
 
 #[system]
-async fn run(state:StateRef<CliArgs>) {
-    let args = state.0.clone();
+async fn run(cli_ref:StateRef<CliArgs>, workspace_ref:StateRef<WorkspaceRoot>) {
+    let args = cli_ref.0.clone();
+    let workspace_path = workspace_ref.0.to_str().unwrap();
     match &args.command {
+        Commands::About(args) => {
+            println!("About - Not Implemented Yet");
+            println!("Args: {:?}", args);
+            println!("Workspace: {:?}", workspace_path);
+        }
         Commands::Make(args) => {
             println!("Make - Not Implemented Yet");
             println!("Args: {:?}", args);
