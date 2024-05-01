@@ -1,9 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
-    "app/crates/main",
-    "app/crates/morphir-javy-core",
-    "app/crates/testkit",
+    "crates/main",
+    "crates/morphir-javy-core",
+    "crates/testkit",
     "devkit/rust/codemodel",
     "devkit/rust/services",
     "devkit/rust/rdk",
@@ -11,7 +11,7 @@ members = [
     "devkit/rust/xdk",
     "extensions/rust/*",
 ]
-default-members = ["app/crates/main", "app/crates/testkit"]
+default-members = ["crates/main", "crates/testkit"]
 
 [workspace.package]
 edition = "2021"
@@ -60,3 +60,4 @@ tokio = { version = "1.10", features = ["macros", "rt-multi-thread", "time"] }
 tracing = "0.1.40"
 url = "2.2.2"
 warpgate = "0.12.1"
+wizer = "6.0.0"
