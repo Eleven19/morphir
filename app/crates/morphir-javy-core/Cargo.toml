@@ -1,0 +1,25 @@
+[package]
+name = "morphir-javy-core"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "morphir_javy_core"
+path = "src/main.rs"
+
+[lib]
+name = "morphir_quickjs_provider"
+crate-type = ["cdylib"]
+
+[dependencies]
+anyhow.workspace = true
+javy.workspace = true
+javy.features = ["export_alloc_fns"]
+javy-apis.workspace = true
+javy-apis.features = ["console", "text_encoding", "random", "stream_io"]
+once_cell.workspace = true
+
+[features]
+experimental_event_loop = []

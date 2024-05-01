@@ -1,17 +1,20 @@
 {
-    "name": "@finos/mock-morphir-elm",
-    "module": "index.ts",
-    "type": "module",
-    "version": "0.0.0",
-    "scripts": {
-        "build": "bunx --bun vite build"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "@types/bun": "latest",
-        "elm": "^0.19.1-6",
-        "elm-test-rs": "^3.0.0-5",
-        "vite": "^5.2.10",
-        "vite-plugin-elm": "^3.0.1"
-    }
+  "name": "@finos/mock-morphir-elm",
+  "module": "index.ts",
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "bunx --bun vite build",
+    "build:examples:hello": "bunx --bun vite build -- --examples"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@bytecodealliance/componentize-js": "^0.8.3",
+    "@types/bun": "latest",
+    "elm": "^0.19.1-6",
+    "elm-test-rs": "^3.0.0-5",
+    "esbuild-plugin-elm": "^0.0.12",
+    "vite": "^5.2.10",
+    "vite-plugin-elm": "^3.0.1"
+  }
 }

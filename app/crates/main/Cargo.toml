@@ -13,14 +13,25 @@ edition = "2021"
 [badges]
 maintenance = { status = "actively-developed" }
 
+[[bin]]
+name = "morphir"
+path = "src/main.rs"
+
+[[bin]]
+name = "morphir-boa"
+path = "experiments/boa/src/main.rs"
+
 [features]
 
 [dependencies]
 anyhow.workspace = true
+boa_engine.workspace = true
+boa_runtime.workspace = true
 clap.workspace = true
 config.workspace = true
 dirs.workspace = true
 miette = { workspace = true, features = ["fancy"] }
+ractor.workspace = true
 refined_type.workspace = true
 schematic.workspace = true
 serde.workspace = true
@@ -29,4 +40,4 @@ starbase.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 tracing.workspace = true
-morphir_codemodel = { path = "../../devkit/rust/codemodel" }
+morphir_codemodel = { path = "../../../devkit/rust/codemodel" }
