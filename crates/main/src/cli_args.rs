@@ -11,11 +11,16 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Commands {
+    About(AboutArgs),
     Make(MakeArgs),
     Gen(GenArgs),
     Develop(DevelopArgs),
     Restore(RestoreArgs)
 }
+
+#[derive(Debug,Args)]
+#[command(about = "Prints information about the morphir CLI tool")]
+pub struct AboutArgs;
 
 #[derive(Debug, Args)]
 #[command(args_conflicts_with_subcommands = true)]
