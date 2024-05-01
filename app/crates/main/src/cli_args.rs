@@ -10,7 +10,7 @@ pub struct Cli {
 }
 
 #[derive(Debug, Subcommand)]
-pub(crate) enum Commands {
+pub enum Commands {
     Make(MakeArgs),
     Gen(GenArgs),
     Develop(DevelopArgs),
@@ -21,7 +21,7 @@ pub(crate) enum Commands {
 #[command(args_conflicts_with_subcommands = true)]
 #[command(flatten_help = true)]
 #[command(about = "Translate Elm sources to Morphir IR")]
-pub(crate) struct MakeArgs {
+pub struct MakeArgs {
     #[arg(short, long)]
     /// Root directory of the project where morphir.json is located. (default: ".")
     project_dir: Option<OsString>,
@@ -34,7 +34,7 @@ pub(crate) struct MakeArgs {
 #[command(args_conflicts_with_subcommands = true)]
 #[command(flatten_help = true)]
 #[command(about = "Generate code from Morphir IR")]
-pub(crate) struct GenArgs {
+pub struct GenArgs {
     #[arg(short, long)]
     /// Source location where the Morphir IR will be loaded from. (default: "morphir-ir.json")
     input: Option<OsString>,
@@ -56,7 +56,7 @@ pub(crate) struct GenArgs {
 #[command(args_conflicts_with_subcommands = true)]
 #[command(flatten_help = true)]
 #[command(about = "Start up a web server and expose developer tools through a web UI")]
-pub(crate) struct DevelopArgs {
+pub struct DevelopArgs {
     #[arg(short, long)]
     /// Root directory of the project where morphir.json is located. (default: ".")
     project_dir: Option<OsString>,
@@ -66,7 +66,7 @@ pub(crate) struct DevelopArgs {
 #[command(args_conflicts_with_subcommands = true)]
 #[command(flatten_help = true)]
 #[command(about = "Restore project or workspaces by restoring dependencies.")]
-pub(crate) struct RestoreArgs {
+pub struct RestoreArgs {
     #[arg(short, long)]
     project:Option<OsString>
 }
