@@ -1,12 +1,13 @@
 use std::path::PathBuf;
+use std::sync::Arc;
 use clap::Parser;
 use starbase::tracing::info;
 use starbase::{system, App, MainResult, State};
 
 mod cli_args;
 mod settings;
-use cli_args::Cli;
 use settings::Settings;
+use crate::cli_args::{Cli, Commands};
 
 #[derive(Debug, State)]
 pub struct Config(Settings);
@@ -18,7 +19,7 @@ pub struct WorkspaceRoot(PathBuf);
 pub struct ArgMatches(clap::ArgMatches);
 
 #[derive(Debug, State)]
-pub struct CliArgs(Cli);
+pub struct CliArgs(Arc<Cli>);
 
 #[tokio::main]
 async fn main() -> MainResult {
@@ -27,6 +28,7 @@ async fn main() -> MainResult {
 
     let mut app = App::new();
     app.shutdown(finish);
+    app.execute(run);
     app.startup(load_config);
     app.startup(gather_cli_args);
     app.startup(preinit_workspace);
@@ -51,7 +53,7 @@ async fn finish(state: StateRef<WorkspaceRoot>) {
 #[system]
 async fn gather_cli_args(states: StatesMut) {
     let cli = Cli::parse();
-    states.set(CliArgs(cli));
+    states.set(CliArgs(Arc::new(cli)));
 }
 
 #[system]
@@ -62,6 +64,28 @@ async fn load_config(states: StatesMut) -> SystemResult {
 
     let config: Config = Config(settings);
     states.set::<Config>(config);
-
     ()
+}
+
+#[system]
+async fn run(state:StateRef<CliArgs>) {
+    let args = state.0.clone();
+    match &args.command {
+        Commands::Make(args) => {
+            println!("Make - Not Implemented Yet");
+            println!("Args: {:?}", args);
+        }
+        Commands::Gen(args) => {
+            println!("Generating - Not Implemented Yet");
+            println!("Args: {:?}", args);
+        }
+        Commands::Develop(args) => {
+            println!("Develop (Starting Server) - Not Implemented Yet");
+            println!("Args: {:?}", args);
+        }
+        Commands::Restore(args) => {
+            println!("Restoring - Not Implemented Yet");
+            println!("Args: {:?}", args);
+        }
+    }
 }

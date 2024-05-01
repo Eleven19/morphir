@@ -6,7 +6,7 @@ use std::ffi::OsString;
 #[command(about = "CLI tooling/commands for the morphir ecosystem", long_about = None)]
 pub struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    pub command: Commands,
 }
 
 #[derive(Debug, Subcommand)]
@@ -14,7 +14,7 @@ pub(crate) enum Commands {
     Make(MakeArgs),
     Gen(GenArgs),
     Develop(DevelopArgs),
-    Restore,
+    Restore(RestoreArgs)
 }
 
 #[derive(Debug, Args)]
@@ -60,4 +60,13 @@ pub(crate) struct DevelopArgs {
     #[arg(short, long)]
     /// Root directory of the project where morphir.json is located. (default: ".")
     project_dir: Option<OsString>,
+}
+
+#[derive(Debug, Args)]
+#[command(args_conflicts_with_subcommands = true)]
+#[command(flatten_help = true)]
+#[command(about = "Restore project or workspaces by restoring dependencies.")]
+pub(crate) struct RestoreArgs {
+    #[arg(short, long)]
+    project:Option<OsString>
 }
