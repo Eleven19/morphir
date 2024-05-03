@@ -5,3 +5,4 @@ pub(crate) mod module;
 pub(crate) mod naming;
 pub(crate) mod project;
 pub(crate) mod tools;
+pub(crate) mod workspace;

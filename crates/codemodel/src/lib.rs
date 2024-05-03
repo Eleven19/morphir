@@ -25,3 +25,7 @@ pub mod module {
 pub mod tools {
     pub use super::internals::tools::*;
 }
+
+pub mod workspace {
+    pub use super::internals::workspace::*;
+}

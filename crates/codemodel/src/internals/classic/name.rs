@@ -1,14 +1,15 @@
+use std::rc::Rc;
 use heck::ToTitleCase;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 //TODO: Let serialization happen using to_string and from_str
 #[derive(Debug, Clone, Eq, PartialEq, Hash, Serialize, Deserialize)]
-pub struct Name(Vec<String>);
+pub struct Name(Rc<[String]>);
 
 impl Name {
-    pub fn segments(&self) -> Vec<String> {
-        self.0.clone()
+    pub fn components(&self) -> &[String] {
+        self.0.as_ref()
     }
 
     /// Converts a slice of string slices into a `Name`.
@@ -61,6 +62,34 @@ impl Name {
         Name(result)
     }
 
+    /// Convert the `Name` into a camel case string.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::Name;
+    /// let name = Name::from_slices(&["foo", "bar", "baz", "123"]);
+    /// assert_eq!(name.to_camel_case(), "fooBarBaz123");
+    /// ```
+    /// ```
+    /// # use morphir_codemodel::classic::name::Name;
+    /// let name = Name::from_slices(&["value", "in", "u","s","d"]);
+    /// assert_eq!(name.to_camel_case(), "valueInUSD");
+    /// ```
+    pub fn to_camel_case(&self) -> String {
+        self.0.iter().enumerate().map(|(i, s)| {
+            if i == 0 {
+                s.to_string()
+            } else {
+                s.to_title_case()
+            }
+        }).collect::<Vec<String>>().join("")
+    }
+    
+    /// Turna a name into a "list" of human-readable strings. The only difference compared to
+    /// `
+    pub fn to_human_words(&self) -> String {
+        todo!()
+    }
+
     /// Convert the `Name` into a title case string.
     /// # Examples
     /// ```
@@ -75,6 +104,14 @@ impl Name {
     /// ```
     pub fn to_title_case(&self) -> String {
         self.0.iter().map(|s| s.to_title_case()).collect::<Vec<String>>().join("")
+    }
+    
+    pub fn to_slice(&self) -> &[String] {
+        self.0.as_ref()
+    }
+    
+    pub fn to_vec(&self) -> Vec<String> {
+        self.0.clone().to_vec()
     }
 
 }
@@ -99,19 +136,19 @@ mod tests {
     #[test]
     fn test_from_string() {
         let name = Name::from("HelloWorld");
-        assert_eq!(name.segments(), vec!["hello".to_string(), "world".to_string()]);
+        assert_eq!(name.components(), vec!["hello".to_string(), "world".to_string()]);
     }
 
     #[test]
     fn test_from_string_with_snake_cased_string() {
         let name = Name::from("hello_world");
-        assert_eq!(name.segments(), vec!["hello".to_string(), "world".to_string()]);
+        assert_eq!(name.components(), vec!["hello".to_string(), "world".to_string()]);
     }
 
     #[test]
     fn test_from_slices() {
         let name = Name::from_slices(&["Hello", "World"]);
-        assert_eq!(name.segments(), vec!["Hello".to_string(), "World".to_string()]);
+        assert_eq!(name.components(), vec!["Hello".to_string(), "World".to_string()]);
     }
 
     #[test]

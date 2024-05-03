@@ -31,6 +31,7 @@ serde.features = ["derive", "rc"]
 serde_json = { workspace = true, optional = true }
 serde_repr = { workspace = true, optional = true }
 state.workspace = true
+thiserror.workspace = true
 rdf-types.workspace = true
 regex.workspace = true
 url.workspace = true
@@ -39,3 +40,10 @@ url.features = ["serde"]
 [dev-dependencies]
 proptest = { workspace = true }
 serde_json.workspace = true
+cucumber = { workspace = true }
+futures = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
+
+[[test]]
+name = "module" # this should be the same as the filename of your test target
+harness = false  # allows Cucumber to print output instead of libtest
