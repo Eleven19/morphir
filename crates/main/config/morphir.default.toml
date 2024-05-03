@@ -1,1 +1,2 @@
-kb.b = "Yo"
+[extensions]
+directories = ["${WorkspaceRoot}/.${CliName}/extensions/"]

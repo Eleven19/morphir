@@ -1,4 +1,5 @@
+pub(crate) mod internals;
 
-mod dist {
-    
+pub mod workspace {
+    pub use super::internals::workspace::*;
 }

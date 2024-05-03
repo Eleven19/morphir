@@ -5,6 +5,7 @@ members = [
     "crates/morphir-javy-core",
     "crates/testkit",
     "crates/codemodel",
+    "crates/hosting",
     "crates/services",
     "devkit/rust/rdk",
     "devkit/rust/tdk",
@@ -14,13 +15,16 @@ members = [
 default-members = ["crates/main", "crates/testkit"]
 
 [workspace.package]
+version = "0.0.1"
 edition = "2021"
 homepage = "https://morphir.finos.org"
+repository = "https://github.com/finos/morphir"
 authors = ["Damian Reeves"]
 license = "Apache-2.0"
 
 
 [workspace.dependencies]
+arcstr = "1.1.5"
 anyhow = "^1.0"
 boa_engine = "0.18.0"
 boa_runtime = "0.18.0"

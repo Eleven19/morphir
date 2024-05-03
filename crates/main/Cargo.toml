@@ -49,5 +49,7 @@ starbase.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 tracing.workspace = true
-morphir_codemodel = { path = "../codemodel" }
+morphir-codemodel = { path = "../codemodel" }
+morphir-hosting = { path = "../hosting" }
+morphir-services = { path = "../services" }
 wizer.workspace = true

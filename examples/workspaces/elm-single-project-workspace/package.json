@@ -1,0 +1,8 @@
+{
+  "name": "elm-single-project-workspace",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "elm": "^0.19.1-6"
+  }
+}

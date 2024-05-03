@@ -156,6 +156,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d5a26814d8dcb93b0e5a0ff3c6d80a8843bafb21b39e8e18a6f05471870e110"
 
 [[package]]
+name = "arcstr"
+version = "1.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f907281554a3d0312bb7aab855a8e0ef6cbf1614d06de54105039ca8b34460e"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "arrayvec"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2696,7 +2705,9 @@ dependencies = [
  "config",
  "dirs 5.0.1",
  "miette",
- "morphir_codemodel",
+ "morphir-codemodel",
+ "morphir-hosting",
+ "morphir-services",
  "ractor",
  "refined_type",
  "schematic",
@@ -2710,19 +2721,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "morphir-javy-core"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "javy",
- "javy-apis",
- "once_cell",
-]
-
-[[package]]
-name = "morphir_codemodel"
+name = "morphir-codemodel"
 version = "0.0.1"
 dependencies = [
+ "arcstr",
  "derivative",
  "flagset",
  "heck 0.5.0",
@@ -2740,26 +2742,49 @@ dependencies = [
 ]
 
 [[package]]
+name = "morphir-hosting"
+version = "0.0.1"
+dependencies = [
+ "arcstr",
+ "morphir-services",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "morphir-javy-core"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "javy",
+ "javy-apis",
+ "once_cell",
+]
+
+[[package]]
+name = "morphir-services"
+version = "0.0.1"
+dependencies = [
+ "arcstr",
+ "extism-pdk",
+ "flagset",
+ "lasso",
+ "morphir-codemodel",
+ "serde_repr",
+ "thiserror",
+]
+
+[[package]]
 name = "morphir_package_management_extension"
 version = "0.0.1"
 dependencies = [
  "extism-pdk",
- "morphir_codemodel",
+ "morphir-codemodel",
  "serde_json",
 ]
 
 [[package]]
 name = "morphir_rdk"
-version = "0.0.1"
-dependencies = [
- "extism-pdk",
- "flagset",
- "lasso",
- "serde_repr",
-]
-
-[[package]]
-name = "morphir_services"
 version = "0.0.1"
 dependencies = [
  "extism-pdk",
