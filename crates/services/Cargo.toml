@@ -22,4 +22,5 @@ extism-pdk.workspace = true
 flagset.workspace = true
 lasso.workspace = true
 morphir-codemodel = { path = "../codemodel"}
+serde.workspace = true
 serde_repr = { workspace = true, optional = true }

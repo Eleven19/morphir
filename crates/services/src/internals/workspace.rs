@@ -1,5 +1,5 @@
-use std::ffi::OsString;
-use std::fmt::Display;
+use serde::{Deserialize, Serialize};
+use std::ffi::{OsStr, OsString};
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 use std::sync::Arc;
@@ -8,28 +8,28 @@ use thiserror::Error;
 #[derive(Debug, Error)]
 pub enum WorkspaceResolutionError {
     #[error("unable to resolve workspace directory from path {0}")]
-    WorkspaceNotFound(),
+    WorkspaceUnresolvable(String),
 }
 
-#[derive(Debug)]
-pub struct WorkspaceDir(PathBuf);
+#[derive(Clone,Debug,PartialEq,Eq,Hash,Ord,PartialOrd,Serialize,Deserialize)]
+pub struct WorkspaceDir(Arc<Path>);
 
 impl WorkspaceDir {
-    pub fn new(path:PathBuf) -> Self {
-        Self(path)
+    pub fn new(path:&Path) -> Self {
+        Self(path.into())
     }
 
     pub fn from_path(path:&Path) -> Option<Self> {
         if path.is_dir() {
-            Some(Self::new(path.to_owned()))
+            Some(Self::new(path))
         } else {
             let dir = path.parent()?;
-            Some(Self::new(dir.to_owned()))
+            Some(Self::new(dir))
         }
     }
 
-    pub fn into_os_string(self) -> OsString {
-        self.0.into_os_string()
+    pub fn as_os_str(&self) -> &OsStr {
+        self.0.as_os_str()
     }
 
     pub fn as_path(&self) -> &Path {
@@ -40,23 +40,17 @@ impl WorkspaceDir {
 impl FromStr for WorkspaceDir {
     type Err = WorkspaceResolutionError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let path_buf = PathBuf::from(s);
-        if path_buf.is_dir() {
-            Ok(Self::new(path_buf))
-        } else if let Some(dir) = path_buf.parent() {
-            Ok(Self::new(dir.to_owned()))
+        let path = Path::new(s);
+        if path.is_dir() {
+            Ok(Self::new(path))
+        } else if let Some(dir) = path.parent() {
+            Ok(Self::new(dir.into()))
         } else {
-            Err(WorkspaceResolutionError{path:s.to_owned()})
+            let str_path = s.to_string();
+            Err(WorkspaceResolutionError::WorkspaceUnresolvable(str_path))
         }
     }
 }
-
-impl From<WorkspaceDir> for OsString {
-    fn from(dir:WorkspaceDir) -> Self {
-        dir.into_os_string()
-    }
-}
-
 #[derive(Debug)]
 pub struct Workspace {
     workspace_root: Arc<PathBuf>,
