@@ -51,6 +51,4 @@ impl DistributionJson {
     }
 }
 
-pub(crate) mod loader {
-
-}
+pub(crate) mod loader {}

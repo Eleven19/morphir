@@ -19,6 +19,7 @@ json = ["serde_json"]
 
 [dependencies]
 arcstr.workspace = true
+arcstr.features = ["serde", "substr"]
 derivative.workspace = true
 flagset.workspace = true
 heck.workspace = true

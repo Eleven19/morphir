@@ -1,6 +1,6 @@
+use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
-use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Clone, Ord, PartialOrd, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct ToolName(Arc<str>);
@@ -12,9 +12,9 @@ impl ToolName {
     pub fn as_str(&self) -> &str {
         &self.0
     }
-    
+
     /// Returns `true` if the name of the tool is equal to the provided name.
-    /// 
+    ///
     /// # Examples
     /// ```
     /// # use morphir_codemodel::tools::ToolName;
@@ -25,14 +25,13 @@ impl ToolName {
     pub fn is(&self, name: &str) -> bool {
         self.as_str() == name
     }
-    
+
     pub fn morphir() -> Self {
         Self::new("morphir")
     }
 }
 
 impl Default for ToolName {
-
     /// Returns a new instance of `ToolName` with the default value of "morphir".
     ///
     /// # Examples

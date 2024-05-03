@@ -1,13 +1,13 @@
-use std::path::PathBuf;
-use std::sync::Arc;
 use clap::Parser;
 use starbase::tracing::info;
 use starbase::{system, App, MainResult, State};
+use std::path::PathBuf;
+use std::sync::Arc;
 
 mod cli_args;
 mod settings;
-use settings::Settings;
 use crate::cli_args::{Cli, Commands};
+use settings::Settings;
 
 #[derive(Debug, State)]
 pub struct Config(Settings);
@@ -68,7 +68,7 @@ async fn load_config(states: StatesMut) -> SystemResult {
 }
 
 #[system]
-async fn run(cli_ref:StateRef<CliArgs>, workspace_ref:StateRef<WorkspaceRoot>) {
+async fn run(cli_ref: StateRef<CliArgs>, workspace_ref: StateRef<WorkspaceRoot>) {
     let args = cli_ref.0.clone();
     let workspace_path = workspace_ref.0.to_str().unwrap();
     match &args.command {

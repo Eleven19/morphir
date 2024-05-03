@@ -7,11 +7,11 @@ use thiserror::Error;
 pub struct WorkspaceDir(Arc<Path>);
 
 impl WorkspaceDir {
-    pub fn new(path:&Path) -> Self {
+    pub fn new(path: &Path) -> Self {
         Self(path.into())
     }
 
-    pub fn from_path(path:&Path) -> Option<Self> {
+    pub fn from_path(path: &Path) -> Option<Self> {
         if path.is_dir() {
             Some(Self::new(path))
         } else {
@@ -44,9 +44,10 @@ impl FromStr for WorkspaceDir {
     }
 }
 
-pub trait WorkspaceLocator{
-    fn locate_workspace_root<P>(&self, path:P) -> Result<WorkspaceDir, WorkspaceResolutionError>
-        where P:Into<PathBuf>;
+pub trait WorkspaceLocator {
+    fn locate_workspace_root<P>(&self, path: P) -> Result<WorkspaceDir, WorkspaceResolutionError>
+    where
+        P: Into<PathBuf>;
 }
 
 #[derive(Debug, Error)]
@@ -59,9 +60,9 @@ pub enum WorkspaceResolutionError {
 
 #[cfg(test)]
 mod tests {
+    use crate::workspace::WorkspaceDir;
     use std::path::Path;
     use std::str::FromStr;
-    use crate::workspace::WorkspaceDir;
 
     #[test]
     fn workspace_dir_should_be_friendly_to_ownership_changes() {

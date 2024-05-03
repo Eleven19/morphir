@@ -1,6 +1,3 @@
-pub struct ModuleWorld {
-    
-}
+pub struct ModuleWorld {}
 
-fn main() {
-}
+fn main() {}

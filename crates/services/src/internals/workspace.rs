@@ -1,8 +1,8 @@
+use morphir_codemodel::workspace::*;
 use serde::{Deserialize, Serialize};
-use std::ffi::{OsString};
+use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use morphir_codemodel::workspace::*;
 
 #[derive(Debug)]
 pub struct Workspace {
@@ -10,16 +10,14 @@ pub struct Workspace {
 }
 
 impl Workspace {
-    pub fn new(root:OsString) -> Self {
+    pub fn new(root: OsString) -> Self {
         let path = Path::new(&root);
         let workspace_root = Arc::new(path.to_owned());
-        
-        Self {
-            workspace_root,
-        }
+
+        Self { workspace_root }
     }
 
-    pub fn find_containing_workspace_of(path:&Path) -> Option<Workspace> {
+    pub fn find_containing_workspace_of(path: &Path) -> Option<Workspace> {
         let mut current = path.to_owned();
         loop {
             if current.join("morphir.toml").exists() {
@@ -33,7 +31,6 @@ impl Workspace {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -46,5 +43,4 @@ mod tests {
         let workspace = Workspace::new(root);
         assert_eq!(workspace.workspace_root.to_str().unwrap(), "test");
     }
-
 }

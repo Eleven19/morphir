@@ -1,20 +1,141 @@
-use std::rc::Rc;
+use arcstr::ArcStr;
 use heck::ToTitleCase;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::borrow::Borrow;
+use std::convert::Infallible;
+use std::fmt::Display;
+use std::ops::Deref;
+use std::rc::Rc;
+use std::str::FromStr;
+
+/// A component of a name. A name is essentially a sequence of components.
+#[derive(Clone, Eq, PartialEq, Hash, Serialize, Deserialize)]
+pub struct NameComponent(ArcStr);
+
+impl NameComponent {
+    /// Indicates if the name component is title cased.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name = NameComponent::from("Foo");
+    /// assert!(name.is_title_cased());
+    /// ```
+    pub fn is_title_cased(&self) -> bool {
+        self.0.chars().next().unwrap().is_uppercase()
+    }
+
+    pub fn to_lowercase(&self) -> NameComponent {
+        self.0.to_lowercase().into()
+    }
+
+    pub fn to_title_case(&self) -> String {
+        self.0.to_title_case()
+    }
+
+    pub fn to_uppercase(&self) -> NameComponent {
+        self.0.to_uppercase().into()
+    }
+}
+
+impl AsRef<str> for NameComponent {
+    fn as_ref(&self) -> &str {
+        self.0.as_ref()
+    }
+}
+
+impl AsRef<[u8]> for NameComponent {
+    fn as_ref(&self) -> &[u8] {
+        self.0.as_ref()
+    }
+}
+
+impl Borrow<str> for NameComponent {
+    fn borrow(&self) -> &str {
+        self.0.as_ref()
+    }
+}
+
+impl std::fmt::Debug for NameComponent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        core::fmt::Debug::fmt(self.0.as_str(), f)
+    }
+}
+
+impl Display for NameComponent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+impl Deref for NameComponent {
+    type Target = str;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl FromStr for NameComponent {
+    type Err = Infallible;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(NameComponent(ArcStr::from(s)))
+    }
+}
+
+impl From<&NameComponent> for NameComponent {
+    fn from(input: &NameComponent) -> Self {
+        input.clone()
+    }
+}
+
+impl From<String> for NameComponent {
+    fn from(input: String) -> Self {
+        NameComponent(ArcStr::from(input.as_str()))
+    }
+}
+
+impl From<&String> for NameComponent {
+    fn from(input: &String) -> Self {
+        NameComponent(ArcStr::from(input.as_str()))
+    }
+}
+
+impl From<ArcStr> for NameComponent {
+    fn from(input: ArcStr) -> Self {
+        NameComponent(input)
+    }
+}
+
+impl From<NameComponent> for ArcStr {
+    fn from(input: NameComponent) -> Self {
+        input.0
+    }
+}
+
+impl From<&str> for NameComponent {
+    fn from(input: &str) -> Self {
+        NameComponent(ArcStr::from(input))
+    }
+}
+
+impl <'a> PartialEq<&'a str> for NameComponent {
+    fn eq(&self, other: &&'a str) -> bool {
+        self.0 == *other
+    }
+}
 
 //TODO: Let serialization happen using to_string and from_str
 #[derive(Debug, Clone, Eq, PartialEq, Hash, Serialize, Deserialize)]
-pub struct Name(Rc<[String]>);
+pub struct Name(Rc<[NameComponent]>);
 
 impl Name {
-    pub fn components(&self) -> &[String] {
-        self.0.as_ref()
+    pub fn components(&self) -> &[NameComponent] {
+        self.0.deref()
     }
 
     /// Converts a slice of string slices into a `Name`.
     pub fn from_slices(parts: &[&str]) -> Self {
-        Name(parts.iter().map(|s| s.to_string()).collect())
+        let components = parts.iter().map(|s| NameComponent::from(*s)).collect();
+        Name(components)
     }
 
     /// Translate a string into a `Name` by splitting it into words. The algorithm is designed to
@@ -57,7 +178,7 @@ impl Name {
         let word_pattern: regex::Regex = Regex::new(r"([a-zA-Z][a-z]*|[0-9]+)").unwrap();
         let result = word_pattern
             .find_iter(input)
-            .map(|m| m.as_str().to_lowercase())
+            .map(|m| NameComponent::from(m.as_str()).to_lowercase())
             .collect();
         Name(result)
     }
@@ -75,17 +196,29 @@ impl Name {
     /// assert_eq!(name.to_camel_case(), "valueInUSD");
     /// ```
     pub fn to_camel_case(&self) -> String {
-        self.0.iter().enumerate().map(|(i, s)| {
-            if i == 0 {
-                s.to_string()
-            } else {
-                s.to_title_case()
-            }
-        }).collect::<Vec<String>>().join("")
+        self.0
+            .iter()
+            .enumerate()
+            .map(|(i, s)| {
+                if i == 0 {
+                    s.to_string()
+                } else {
+                    s.to_title_case()
+                }
+            })
+            .collect::<Vec<String>>()
+            .join("")
     }
-    
-    /// Turna a name into a "list" of human-readable strings. The only difference compared to
-    /// `
+
+    /// Turns a name into a "list" of human-readable strings. The only difference compared
+    /// to `components` is how it handles abbreviations. They will be turned into a single
+    /// uppercase word instead of separate single-character words.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::Name;
+    /// let name = Name::from(["value", "in", "u","s","d"]);
+    /// assert_eq!(name.to_human_words(), ["value", "in", "USD"]);
+    /// ```
     pub fn to_human_words(&self) -> String {
         todo!()
     }
@@ -103,17 +236,25 @@ impl Name {
     /// assert_eq!(name.to_title_case(), "ValueInUSD");
     /// ```
     pub fn to_title_case(&self) -> String {
-        self.0.iter().map(|s| s.to_title_case()).collect::<Vec<String>>().join("")
-    }
-    
-    pub fn to_slice(&self) -> &[String] {
-        self.0.as_ref()
-    }
-    
-    pub fn to_vec(&self) -> Vec<String> {
-        self.0.clone().to_vec()
+        self.0
+            .iter()
+            .map(|s| s.to_title_case())
+            .collect::<Vec<String>>()
+            .join("")
     }
 
+    pub fn into_boxed_slice_of_string(self) -> Box<[String]> {
+        self.0
+            .iter()
+            .map(|c| c.to_string())
+            .collect::<Vec<String>>()
+            .into_boxed_slice()
+    }
+
+    pub fn to_vec(&self) -> Vec<String> {
+        let res = self.0.to_vec();
+        res.iter().map(|c| c.to_string()).collect::<Vec<String>>()
+    }
 }
 
 impl From<&str> for Name {
@@ -128,50 +269,71 @@ impl From<String> for Name {
     }
 }
 
+impl <T:Into<NameComponent>> From<Vec<T>> for Name {
+    fn from(input: Vec<T>) -> Self {
+        let components = input.into_iter().map(|c| c.into()).collect();
+        Name(components)
+    }
+}
+
+// impl <T:Into<NameComponent>> From<&[T]> for Name {
+//     fn from(input: &[T]) -> Self {
+//         let components = input.iter().map(|c| Into::into(c)).collect();
+//         Name(components)
+//     }
+// }
+// 
+// impl <T:Into<NameComponent> + Sized, const N:usize>  From<[T;N]> for Name {
+//     fn from(input: [T;N]) -> Self {
+//         let components = input.iter().map(|c| c.into()).collect();
+//         Name(components)
+//     }
+// }
+
 #[cfg(test)]
 mod tests {
-    use serde_json::json;
     use super::*;
+    use serde_json::json;
 
     #[test]
     fn test_from_string() {
         let name = Name::from("HelloWorld");
-        assert_eq!(name.components(), vec!["hello".to_string(), "world".to_string()]);
+        assert_eq!(name.components(), ["hello", "world"]);
     }
 
     #[test]
     fn test_from_string_with_snake_cased_string() {
         let name = Name::from("hello_world");
-        assert_eq!(name.components(), vec!["hello".to_string(), "world".to_string()]);
+        assert_eq!(name.components(), ["hello", "world"]);
     }
 
     #[test]
     fn test_from_slices() {
         let name = Name::from_slices(&["Hello", "World"]);
-        assert_eq!(name.components(), vec!["Hello".to_string(), "World".to_string()]);
+        assert_eq!(name.components(), ["Hello", "World"]);
     }
 
     #[test]
-    fn should_support_conversion_from_a_string_slice(){
+    fn should_support_conversion_from_a_string_slice() {
         let name = Name::from("well-known");
         assert_eq!(name, Name::from_slices(&["well", "known"]))
     }
 
     #[test]
-    fn should_support_conversion_from_a_string(){
+    fn should_support_conversion_from_a_string() {
         let actual = Name::from("PascalCase".to_string());
         let expected = Name::from_slices(&["pascal", "case"]);
         assert_eq!(actual, expected)
     }
 
     #[test]
-    fn should_support_conversion_to_title_case(){
+    fn should_support_conversion_to_title_case() {
         let name = Name::from("well-known");
         assert_eq!(name.to_title_case(), "WellKnown")
     }
 
     #[test]
-    fn when_serialized_to_json_should_be_a_json_array(){
+    fn when_serialized_to_json_should_be_a_json_array() {
         let name = Name::from("Alexander Hamilton");
         let actual = json!(name);
         assert_eq!(actual, json!(["alexander", "hamilton"]));

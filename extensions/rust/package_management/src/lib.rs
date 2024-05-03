@@ -1,7 +1,7 @@
 use extism_pdk::*;
-use serde_json::json;
 use morphir_codemodel::distribution::*;
 use morphir_codemodel::project::MorphirProject;
+use serde_json::json;
 
 #[plugin_fn]
 pub fn greet(name: String) -> FnResult<String> {
@@ -12,8 +12,6 @@ pub fn greet(name: String) -> FnResult<String> {
 pub fn get_project_dependencies(
     Json(project): Json<MorphirProject>,
 ) -> FnResult<Json<Vec<DistributionJson>>> {
-    
-    
     //let mut distributions = Vec::new();
     // for dependency in &project.dependencies {
     //     match &dependency.location {
@@ -37,6 +35,6 @@ pub fn get_project_dependencies(
         }
     ));
     let distributions: Vec<DistributionJson> = vec![dist_json];
-    
+
     Ok(distributions.into())
 }

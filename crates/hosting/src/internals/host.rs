@@ -1,11 +1,10 @@
-
 use arcstr::ArcStr;
+use morphir_services::workspace::{WorkspaceDir, WorkspaceLocator, WorkspaceResolutionError};
 use serde::{Deserialize, Serialize};
 use std::env::current_dir;
-use std::path::{PathBuf};
-use morphir_services::workspace::{WorkspaceDir, WorkspaceLocator, WorkspaceResolutionError};
+use std::path::PathBuf;
 
-pub const MORPHIR_HOST_ID_STR:ArcStr = arcstr::literal!("morphir");
+pub const MORPHIR_HOST_ID_STR: ArcStr = arcstr::literal!("morphir");
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd, Serialize, Deserialize)]
 /// A named identifier for a host.
@@ -27,20 +26,18 @@ pub const MORPHIR_HOST_ID_STR:ArcStr = arcstr::literal!("morphir");
 ///
 pub struct HostId(ArcStr);
 impl HostId {
-
-    pub const MORPHIR:HostId = HostId(MORPHIR_HOST_ID_STR);
-    pub fn new(id:&str) -> Self {
+    pub const MORPHIR: HostId = HostId(MORPHIR_HOST_ID_STR);
+    pub fn new(id: &str) -> Self {
         Self(ArcStr::from(id))
     }
 
     pub fn id(&self) -> &str {
         &self.0
     }
-
 }
 
 pub struct Host {
-    pub id:HostId,
+    pub id: HostId,
 }
 
 impl Host {
@@ -48,10 +45,8 @@ impl Host {
     //     todo!()
     // }
 
-    pub fn new(id:HostId) -> Self {
-        Self {
-            id,
-        }
+    pub fn new(id: HostId) -> Self {
+        Self { id }
     }
 
     /// Returns the name of the folder that should be used to store host-specific data.
@@ -69,8 +64,10 @@ impl Host {
 }
 
 impl WorkspaceLocator for Host {
-    fn locate_workspace_root<P>(&self, path:P) -> Result<WorkspaceDir, WorkspaceResolutionError>
-    where P:Into<PathBuf> {
+    fn locate_workspace_root<P>(&self, path: P) -> Result<WorkspaceDir, WorkspaceResolutionError>
+    where
+        P: Into<PathBuf>,
+    {
         let host_folder_name = self.host_folder_name();
         let path = path.into();
         let mut current = path.to_owned();
@@ -86,20 +83,20 @@ impl WorkspaceLocator for Host {
                 break;
             }
         }
-        let path_str = format!("{:?}",&path);
-        Err(WorkspaceResolutionError{path:path_str})
+        let path_str = format!("{:?}", &path);
+        Err(WorkspaceResolutionError { path: path_str })
     }
 }
 
 #[cfg(test)]
 mod tests {
-    
+
     use super::*;
     use serde_json::*;
     use std::env::current_dir;
 
     #[test]
-    fn a_host_id_should_serialize_to_a_simple_json_string(){
+    fn a_host_id_should_serialize_to_a_simple_json_string() {
         let host_id = HostId::MORPHIR;
         let serialized = json!(host_id);
         let expected = json!("morphir");
@@ -107,7 +104,7 @@ mod tests {
     }
 
     #[test]
-    fn it_should_be_possible_to_locate_the_workspace_root_for_a_host(){
+    fn it_should_be_possible_to_locate_the_workspace_root_for_a_host() {
         let host = Host::new(HostId::MORPHIR);
         let cwd = current_dir().unwrap();
         let path = cwd.join(file!());

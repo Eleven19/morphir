@@ -15,10 +15,10 @@ pub enum Commands {
     Make(MakeArgs),
     Gen(GenArgs),
     Develop(DevelopArgs),
-    Restore(RestoreArgs)
+    Restore(RestoreArgs),
 }
 
-#[derive(Debug,Args)]
+#[derive(Debug, Args)]
 #[command(about = "Prints information about the morphir CLI tool")]
 pub struct AboutArgs;
 
@@ -73,5 +73,5 @@ pub struct DevelopArgs {
 #[command(about = "Restore project or workspaces by restoring dependencies.")]
 pub struct RestoreArgs {
     #[arg(short, long)]
-    project:Option<OsString>
+    project: Option<OsString>,
 }
