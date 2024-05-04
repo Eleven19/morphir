@@ -1,3 +1,4 @@
+pub mod deprecated;
 pub mod fq_name;
 pub mod module;
 pub mod name;
