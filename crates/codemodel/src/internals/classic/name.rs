@@ -1,6 +1,9 @@
 use arcstr::ArcStr;
 use heck::ToTitleCase;
 use regex::Regex;
+use once_cell::sync::Lazy;fn join(words: &[&str]) -> String {
+    words.concat().to_uppercase()
+}
 use serde::{Deserialize, Serialize};
 use std::borrow::Borrow;
 use std::convert::Infallible;
@@ -9,11 +12,84 @@ use std::ops::Deref;
 use std::rc::Rc;
 use std::str::FromStr;
 
+static IS_UPPERCASE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\p{Lu}+$").unwrap());
+
 /// A component of a name. A name is essentially a sequence of components.
 #[derive(Clone, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub struct NameComponent(ArcStr);
 
 impl NameComponent {
+
+    /// Append a string to the name component.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name = NameComponent::from("Compound");
+    /// assert_eq!(name.append("Word"), NameComponent::from("CompoundWord"));
+    /// ```
+    pub fn append<T:Display>(&self, other: T) -> NameComponent {
+        let new_str = format!("{}{}", self.0, other);
+        NameComponent(ArcStr::from(new_str.as_str()))
+    }
+
+    /// Extract a string slice containing our data.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name = NameComponent::from("Foo");
+    /// assert_eq!(name.as_str(), "Foo");
+    /// ```
+    pub fn as_str(&self) -> &str {
+        self.0.as_ref()
+    }
+
+    /// Concatenate two name components.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name1 = NameComponent::from("Foo");
+    /// let name2 = NameComponent::from("Bar");
+    /// assert_eq!(name1.concat(&name2), NameComponent::from("FooBar"));
+    /// ```
+    pub fn concat(&self, other: &NameComponent) -> NameComponent {
+        let new_str = format!("{}{}", self.0, other.0);
+        NameComponent(ArcStr::from(new_str.as_str()))
+    }
+
+    /// Join a slice of name components using a separator.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name1 = NameComponent::from("Foo");
+    /// let name2 = NameComponent::from("Bar");
+    /// let name3 = NameComponent::from("Baz");
+    /// let components = vec![&name1, &name2, &name3];
+    /// assert_eq!(NameComponent::join(&components, "_"), NameComponent::from("Foo_Bar_Baz"));
+    /// ```
+    pub fn join(components: &[&NameComponent], separator:&str) -> NameComponent {
+        let new_str = components.iter().map(|c| c.0.as_ref()).collect::<Vec<&str>>().join(separator);
+        NameComponent(ArcStr::from(new_str.as_str()))
+    }
+
+    /// Returns our length in bytes.
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    /// Indicates if the name component is empty.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// assert!(NameComponent::from("").is_empty());
+    /// ```
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// assert!(!NameComponent::from("here").is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
     /// Indicates if the name component is title cased.
     /// # Examples
     /// ```
@@ -23,6 +99,34 @@ impl NameComponent {
     /// ```
     pub fn is_title_cased(&self) -> bool {
         self.0.chars().next().unwrap().is_uppercase()
+    }
+
+    /// Indicates if the name component is upper-cased.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name = NameComponent::from("FOO");
+    /// assert!(name.is_uppercase());
+    /// ```
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name = NameComponent::from("Foo");
+    /// assert!(!name.is_uppercase());
+    /// ```
+    pub fn is_uppercase(&self) -> bool {
+        IS_UPPERCASE.is_match(self.0.as_ref())
+    }
+
+    /// Prepend a string to the name component.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name = NameComponent::from("Word");
+    /// assert_eq!(name.prepend("Compound"), NameComponent::from("CompoundWord"));
+    /// ```
+    pub fn prepend<T:Display>(&self, other: T) -> NameComponent {
+        let new_str = format!("{}{}", other, self.0);
+        NameComponent(ArcStr::from(new_str.as_str()))
     }
 
     pub fn to_lowercase(&self) -> NameComponent {
@@ -35,6 +139,16 @@ impl NameComponent {
 
     pub fn to_uppercase(&self) -> NameComponent {
         self.0.to_uppercase().into()
+    }
+
+    /// Convert the name component into a `std::string::String`.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::NameComponent;
+    /// let name = NameComponent::from("Peekaboo");
+    /// assert_eq!(name.to_string(), "Peekaboo");
+    pub fn to_string(&self) -> String {
+        self.0.to_string()
     }
 }
 
@@ -138,6 +252,14 @@ impl Name {
         Name(components)
     }
 
+    fn to_str_vec(&self) -> Vec<&str> {
+        self.0.iter().map(|c| c.as_str()).collect()
+    }
+
+    fn to_arcstrs(&self) -> Vec<ArcStr> {
+        self.0.iter().map(|c| c.0.clone()).collect()
+    }
+
     /// Translate a string into a `Name` by splitting it into words. The algorithm is designed to
     /// work with most well-known naming conventions or mix of them. The general rule is that
     /// consecutive letters and numbers are treated as words, upper-case letters and non-alphanumeric
@@ -175,8 +297,8 @@ impl Name {
     /// assert_eq!(name, Name::from_slices(&["value", "in", "u","s","d"]));
     /// ```
     pub fn from_str(input: &str) -> Self {
-        let word_pattern: regex::Regex = Regex::new(r"([a-zA-Z][a-z]*|[0-9]+)").unwrap();
-        let result = word_pattern
+        static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"([a-zA-Z][a-z]*|[0-9]+)").unwrap());
+        let result = RE
             .find_iter(input)
             .map(|m| NameComponent::from(m.as_str()).to_lowercase())
             .collect();
@@ -216,11 +338,27 @@ impl Name {
     /// # Examples
     /// ```
     /// # use morphir_codemodel::classic::name::Name;
-    /// let name = Name::from(["value", "in", "u","s","d"]);
-    /// assert_eq!(name.to_human_words(), ["value", "in", "USD"]);
+    /// let name = Name::from(vec!["value", "in", "u","s","d"]);
+    /// assert_eq!(name.to_human_words(), vec!["value", "in", "USD"]);
     /// ```
-    pub fn to_human_words(&self) -> String {
-        todo!()
+    pub fn to_human_words(&self) -> Vec<String> {
+        let words_vec = self.to_vec();
+        let words:&[String] = words_vec.as_ref();
+        fn process(prefix: &[String], abbrev:&[String], suffix:&[String]) -> Vec<String> {
+            todo!()
+        }
+
+        match &words[..] {
+            [word] => {
+                if word.len() == 1 {
+                    words.to_vec()
+                } else {
+                    //process(&[], &[], &words)
+                    todo!()
+                }
+            }
+             _ => process(&[], &[], &words)
+        }
     }
 
     /// Convert the `Name` into a title case string.
@@ -282,7 +420,7 @@ impl <T:Into<NameComponent>> From<Vec<T>> for Name {
 //         Name(components)
 //     }
 // }
-// 
+//
 // impl <T:Into<NameComponent> + Sized, const N:usize>  From<[T;N]> for Name {
 //     fn from(input: [T;N]) -> Self {
 //         let components = input.iter().map(|c| c.into()).collect();
@@ -290,10 +428,55 @@ impl <T:Into<NameComponent>> From<Vec<T>> for Name {
 //     }
 // }
 
+pub struct SName(ArcStr);
+impl SName {
+    pub fn as_str(&self) -> &str {
+        self.0.as_ref()
+    }
+}
+impl From<Vec<&str>> for SName {
+
+    /// Convert a vector of strings into a single string.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::SName;
+    /// let name = SName::from(vec!["foo", "bar", "baz"]);
+    /// assert_eq!(name.as_str(), "foo\0bar\0baz");
+    /// ```
+    fn from(input: Vec<&str>) -> Self {
+        let name = input.join("\0");
+        SName(ArcStr::from(name))
+    }
+}
+
+impl From<SName> for Vec<String> {
+    
+    /// Convert a single string into a vector of strings.
+    /// # Examples
+    /// ```
+    /// # use morphir_codemodel::classic::name::SName;
+    /// let name = SName::from(vec!["foo", "bar", "baz"]);
+    /// assert_eq!(Vec::<String>::from(name), vec!["foo", "bar", "baz"]);
+    /// ```
+    fn from(input: SName) -> Vec<String> {
+        input.as_str().split('\0').map(|s| s.to_string()).collect()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use serde_json::json;
+
+    fn join(words: &[&str]) -> String {
+        words.concat().to_uppercase()
+    }
+    #[test]
+    fn it_should_be_possible_to_join_abbrevs_into_a_single_string() {
+        let words = ["u", "s", "d"];
+        let actual = join(&words);
+        assert_eq!(actual, "USD")
+    }
 
     #[test]
     fn test_from_string() {
