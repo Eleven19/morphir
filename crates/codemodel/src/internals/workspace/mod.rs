@@ -4,6 +4,14 @@ use std::str::FromStr;
 use std::sync::Arc;
 use thiserror::Error;
 
+pub(crate) mod builder;
+
+pub struct Workspace {
+    root: WorkspaceDir,
+}
+
+
+
 pub struct WorkspaceDir(Arc<Path>);
 
 impl WorkspaceDir {
@@ -46,8 +54,8 @@ impl FromStr for WorkspaceDir {
 
 pub trait WorkspaceLocator {
     fn locate_workspace_root<P>(&self, path: P) -> Result<WorkspaceDir, WorkspaceResolutionError>
-    where
-        P: Into<PathBuf>;
+        where
+            P: Into<PathBuf>;
 }
 
 #[derive(Debug, Error)]
