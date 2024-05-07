@@ -1,4 +1,4 @@
-use crate::Name;
+use crate::classic::name::Name;
 
 use rdf_types::dataset::Graph;
 

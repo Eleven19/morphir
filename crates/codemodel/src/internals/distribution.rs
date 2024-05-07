@@ -1,4 +1,4 @@
-use crate::PackageName;
+use crate::classic::package::PackageName;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Clone, Serialize)]
