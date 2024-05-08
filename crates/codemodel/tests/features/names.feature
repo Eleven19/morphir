@@ -1,4 +1,4 @@
-Feature: Module Feature
+Feature: Names Feature
 
     Scenario: Creating a Name from a string
         Given a string "John Doe"
