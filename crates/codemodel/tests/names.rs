@@ -12,6 +12,11 @@ pub enum Fixture {
     }
 }
 
+#[given(expr = "a name of '{word}'")]
+fn set_name_input(world: &mut NamesWorld, input: String) {
+    world.scenario = Some(Fixture::GivenStringName { input });
+}
+
 #[tokio::main]
 async fn main() {
     NamesWorld::run("tests/features/names").await;
