@@ -1,7 +1,8 @@
 use std::ops::Deref;
+use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 
-pub trait NameRepr: Deref<Target = str> {
+pub trait NameRepr: Deref<Target = str> + FromStr {
     type Segment: Into<String>;
     fn segments(&self) -> &[Self::Segment];
 }
