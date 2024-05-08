@@ -1,11 +1,15 @@
 use cucumber::{given, then, when, World};
 
 #[derive(Debug, Default, World)]
-pub struct NamesWorld {}
+pub struct NamesWorld {
+    scenario: Option<Fixture>,
+}
 
 #[derive(Debug)]
-pub enum ScenarioKind{
-    GivenStringName()
+pub enum Fixture {
+    GivenStringName {
+        input: String,
+    }
 }
 
 #[tokio::main]
