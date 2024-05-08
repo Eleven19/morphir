@@ -45,5 +45,5 @@ futures = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 
 [[test]]
-name = "module" # this should be the same as the filename of your test target
+name = "names" # this should be the same as the filename of your test target
 harness = false  # allows Cucumber to print output instead of libtest
